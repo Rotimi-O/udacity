@@ -41,7 +41,8 @@ vector<vector<State>> ReadBoardFile(string path) {
 
 string CellString(State cell) {
   switch(cell) {
-    case State::kObstacle: return "⛰️   ";
+    //case State::kObstacle: return "⛰️   ";
+    case State::kObstacle: return "⛰   ";
     default: return "0   "; 
   }
 }
