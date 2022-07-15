@@ -44,7 +44,7 @@ namespace Catch {
         static bool isSet;
         static struct sigaction oldSigActions[];
         static stack_t oldSigStack;
-        static char altStackMem[];
+        static char altStackMem[20];
 
         static void handleSignal( int sig );
 
