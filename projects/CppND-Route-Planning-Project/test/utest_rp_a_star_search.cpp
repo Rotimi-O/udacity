@@ -53,7 +53,7 @@ class RoutePlannerTest : public ::testing::Test {
     float end_y = 0.9;
     RouteModel::Node* start_node = &model.FindClosestNode(start_x, start_y);
     RouteModel::Node* end_node = &model.FindClosestNode(end_x, end_y);
-
+   
     // Construct another node in the middle of the map for testing.
     float mid_x = 0.5;
     float mid_y = 0.5;

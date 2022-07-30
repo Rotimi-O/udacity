@@ -9,16 +9,18 @@ RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, floa
     end_x *= 0.01;
     end_y *= 0.01;
 
-    RouteModel::Node start_node_loc = m_Model.FindClosestNode(start_x, start_y);
-    RouteModel::Node end_node_loc = m_Model.FindClosestNode(end_x, end_y);
+    RouteModel::Node *start_node_loc = &m_Model.FindClosestNode(start_x, start_y);
+    RouteModel::Node *end_node_loc = &m_Model.FindClosestNode(end_x, end_y);
 
-    this->start_node = &start_node_loc;
-    this->end_node = &end_node_loc;
+    this->start_node = start_node_loc;
+    this->end_node = end_node_loc;
 }
 
 float RoutePlanner::CalculateHValue(RouteModel::Node const *node)
 {
-    return node->distance(*(this->end_node));
+     
+     float distance = node->distance(*(this->end_node));
+    return distance;
 }
 
 // TODO 4: Complete the AddNeighbors method to expand the current node by adding all unvisited neighbors to the open list.
