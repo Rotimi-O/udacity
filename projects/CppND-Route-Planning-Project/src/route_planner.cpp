@@ -19,7 +19,6 @@ float RoutePlanner::CalculateHValue(RouteModel::Node const *node) {
    return node -> distance(*(this -> end_node));
 }
 
-
 // TODO 4: Complete the AddNeighbors method to expand the current node by adding all unvisited neighbors to the open list.
 // Tips:
 // - Use the FindNeighbors() method of the current_node to populate current_node.neighbors vector with all the neighbors.
@@ -34,10 +33,9 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
         neighbour_ptr -> g_value = (current_node -> g_value) + (current_node -> distance(*neighbour_ptr));
         neighbour_ptr -> visited = true;
         neighbour_ptr ->parent = current_node;
-        current_node -> neighbors.push_back(neighbour_ptr);
+        this ->open_list.push_back(neighbour_ptr);
     }
 }
-
 
 // TODO 5: Complete the NextNode method to sort the open list and return the next node.
 // Tips:
@@ -45,9 +43,17 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 // - Create a pointer to the node in the list with the lowest sum.
 // - Remove that node from the open_list.
 // - Return the pointer.
+bool compare(RouteModel::Node const *this_node, RouteModel::Node const *that_node) {
+    float this_fvalue = (this_node -> g_value) + (this_node -> h_value);
+    float that_fvalue = (that_node -> g_value) + (that_node -> h_value);
+    return (this_fvalue < that_fvalue);
+}
 
 RouteModel::Node *RoutePlanner::NextNode() {
-
+    std::sort(this -> open_list.begin(), this -> open_list.end(), compare);
+    RouteModel::Node *nextNodePtr = *(this -> open_list.begin());
+    this -> open_list.pop_back();
+    return nextNodePtr;
 }
 
 
