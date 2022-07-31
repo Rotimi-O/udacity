@@ -36,7 +36,7 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node)
     {
         neighbour_ptr->h_value = this->CalculateHValue(neighbour_ptr);
         neighbour_ptr->g_value = (current_node->g_value) + (current_node->distance(*neighbour_ptr));
-        current_node->visited = true;
+        neighbour_ptr->visited = true;
         neighbour_ptr->parent = current_node;
         this->open_list.push_back(neighbour_ptr);
     }
@@ -58,13 +58,13 @@ bool compare(RouteModel::Node const *this_node, RouteModel::Node const *that_nod
 RouteModel::Node *RoutePlanner::NextNode()
 {
     std::cout <<" Before remove Array size -: " << this->open_list.size() <<std::endl;
-    std::sort(this->open_list.begin(), this->open_list.end(), compare);
-    //RouteModel::Node *start = *(this->open_list.begin());
-    //RouteModel::Node *end = *(this->open_list.end());
-    //std::cout <<"After erase "<< "stat f -: " << (start ->g_value + start ->h_value) <<" end f -: "<< (end ->g_value + start ->h_value) <<std::endl;
-    this -> open_list.erase(this ->open_list.end());
     RouteModel::Node *start = *(this->open_list.begin());
     RouteModel::Node *end = *(this->open_list.end());
+    std::cout <<"before sort "<< "stat f -: " << (start ->g_value + start ->h_value) <<" end f -: "<< (end ->g_value + start ->h_value) <<std::endl;
+    std::sort(this->open_list.begin(), this->open_list.end(), compare);
+    this -> open_list.pop_back();
+    start = *(this->open_list.begin());
+    end = *(this->open_list.end());
     std::cout <<"After erase "<< "stat f -: " << (start ->g_value + start ->h_value) <<" end f -: "<< (end ->g_value + start ->h_value) <<std::endl;
     std::cout <<" After remove Array size -: " << this->open_list.size() <<std::endl;
     std::cout << "long -: " <<end->x << " lat -: "  <<end->y << std::endl;
@@ -91,13 +91,14 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
     RouteModel::Node *current_node_loc = current_node;
     while (current_node_loc != nullptr)
     {
-
-        distance = current_node_loc->distance(*(current_node_loc->parent));
-        distance *= m_Model.MetricScale(); // Multiply the distance by the scale of the map to get meters.
+        if(current_node_loc == this->start_node) {
+            distance = 0.0f;
+        } else {
+            distance = current_node_loc->distance(*(current_node_loc->parent));
+            distance *= m_Model.MetricScale(); // Multiply the distance by the scale of the map to get meters.
+        }
         this->distance = (this->distance) + distance;
-
         path_found.push_back(*current_node_loc);
-
         current_node_loc = current_node_loc->parent;
     }
     std::reverse(path_found.begin(), path_found.end());
@@ -118,6 +119,7 @@ void RoutePlanner::AStarSearch()
     RouteModel::Node *current_node = this->start_node;
     current_node ->h_value = this->CalculateHValue(current_node);
     current_node ->g_value = 0.0f;
+     current_node ->visited = true;
 // TODO: Implement your solution here.
    std::cout << "starting second" <<std::endl;
     while((current_node != this->end_node) && (current_node != nullptr)) {
