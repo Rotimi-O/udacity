@@ -13,6 +13,7 @@ RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, floa
     RouteModel::Node *end_node_loc = &m_Model.FindClosestNode(end_x, end_y);
 
     this->start_node = start_node_loc;
+    this->start_node ->parent = nullptr;
     this->end_node = end_node_loc;
 }
 
@@ -57,18 +58,25 @@ bool compare(RouteModel::Node const *this_node, RouteModel::Node const *that_nod
 
 RouteModel::Node *RoutePlanner::NextNode()
 {
-    std::cout <<" Before remove Array size -: " << this->open_list.size() <<std::endl;
-    RouteModel::Node *start = *(this->open_list.begin());
-    RouteModel::Node *end = *(this->open_list.end());
-    std::cout <<"before sort "<< "stat f -: " << (start ->g_value + start ->h_value) <<" end f -: "<< (end ->g_value + start ->h_value) <<std::endl;
-    std::sort(this->open_list.begin(), this->open_list.end(), compare);
-    this -> open_list.pop_back();
-    start = *(this->open_list.begin());
-    end = *(this->open_list.end());
-    std::cout <<"After erase "<< "stat f -: " << (start ->g_value + start ->h_value) <<" end f -: "<< (end ->g_value + start ->h_value) <<std::endl;
-    std::cout <<" After remove Array size -: " << this->open_list.size() <<std::endl;
-    std::cout << "long -: " <<end->x << " lat -: "  <<end->y << std::endl;
-    return end;
+    std::cout << " Before remove Array size -: " << this->open_list.size() << std::endl;
+    if (this->open_list.size() == 1) //nneed to sort
+    {
+        RouteModel::Node *start = *(this->open_list.begin());
+        this->open_list.pop_back();
+        return start;
+    }
+    else
+    {
+        std::sort(this->open_list.begin(), this->open_list.end(), compare);
+        this->open_list.pop_back();
+        RouteModel::Node *start = *(this->open_list.begin());
+        RouteModel::Node *end = *(this->open_list.end());
+        std::cout << "After erase "
+                  << "stat f -: " << (start->g_value + start->h_value) << " end f -: " << (end->g_value + start->h_value) << std::endl;
+        std::cout << " After remove Array size -: " << this->open_list.size() << std::endl;
+        std::cout << "long -: " << end->x << " lat -: " << end->y << std::endl;
+        return end;
+    }
 }
 
 
@@ -91,9 +99,7 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
     RouteModel::Node *current_node_loc = current_node;
     while (current_node_loc != nullptr)
     {
-        if(current_node_loc == this->start_node) {
-            distance = 0.0f;
-        } else {
+        if(current_node_loc != this->start_node) {
             distance = current_node_loc->distance(*(current_node_loc->parent));
             distance *= m_Model.MetricScale(); // Multiply the distance by the scale of the map to get meters.
         }
@@ -115,21 +121,29 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
 
 void RoutePlanner::AStarSearch()
 {
-    std::cout << "starting first " <<std::endl;
+    std::cout << "starting first " << std::endl;
     RouteModel::Node *current_node = this->start_node;
-    current_node ->h_value = this->CalculateHValue(current_node);
-    current_node ->g_value = 0.0f;
-     current_node ->visited = true;
-// TODO: Implement your solution here.
-   std::cout << "starting second" <<std::endl;
-    while((current_node != this->end_node) && (current_node != nullptr)) {
-        std::cout << "First inside while" <<std::endl;
-        std::cout << "long -: " <<current_node -> x << " lat -: "  <<current_node -> y << std::endl;
-        this -> AddNeighbors(current_node);
-        std::cout << "After AddNeighbors(current_node)" <<std::endl;
-        current_node = this -> NextNode();
-        std::cout << "long -: " <<current_node -> x << " lat -: "  <<current_node -> y << std::endl;
-        std::cout << "After  NextNode() -: " <<std::endl;
+    current_node->h_value = this->CalculateHValue(current_node);
+    current_node->g_value = 0.0f;
+    current_node->visited = true;
+    this->AddNeighbors(current_node);
+    // TODO: Implement your solution here.
+    std::cout << "starting second" << std::endl;
+    while (this->open_list.size() > 0)
+    {
+        std::cout << "First inside while" << std::endl;
+        std::cout << "long -: " << current_node->x << " lat -: " << current_node->y << std::endl;
+        current_node = this->NextNode();
+
+        this->AddNeighbors(current_node);
+        std::cout << "After AddNeighbors(current_node)" << std::endl;
+        std::cout << "long -: " << current_node->x << " lat -: " << current_node->y << std::endl;
+        std::cout << "After  NextNode() -: " << std::endl;
     }
-    this ->m_Model.path = this -> ConstructFinalPath(current_node);
+    current_node = this->end_node;
+    current_node->h_value = this->CalculateHValue(current_node);
+    current_node->g_value = 0.0f;
+    current_node->visited = true;
+    std::cout <<"After while " << "long -: " << current_node->x << " lat -: " << current_node->y << std::endl;
+    this->m_Model.path = this->ConstructFinalPath(current_node);
 }
