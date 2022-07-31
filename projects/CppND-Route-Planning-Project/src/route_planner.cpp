@@ -18,7 +18,6 @@ RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, floa
 
 float RoutePlanner::CalculateHValue(RouteModel::Node const *node)
 {
-     
      float distance = node->distance(*(this->end_node));
     return distance;
 }
@@ -37,7 +36,7 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node)
     {
         neighbour_ptr->h_value = this->CalculateHValue(neighbour_ptr);
         neighbour_ptr->g_value = (current_node->g_value) + (current_node->distance(*neighbour_ptr));
-        neighbour_ptr->visited = true;
+        current_node->visited = true;
         neighbour_ptr->parent = current_node;
         this->open_list.push_back(neighbour_ptr);
     }
@@ -58,12 +57,22 @@ bool compare(RouteModel::Node const *this_node, RouteModel::Node const *that_nod
 
 RouteModel::Node *RoutePlanner::NextNode()
 {
+    std::cout <<" Before remove Array size -: " << this->open_list.size() <<std::endl;
     std::sort(this->open_list.begin(), this->open_list.end(), compare);
-    RouteModel::Node *nextNodePtr = *(this->open_list.end());
-    this->open_list.pop_back();
-    return nextNodePtr;
+    //RouteModel::Node *start = *(this->open_list.begin());
+    //RouteModel::Node *end = *(this->open_list.end());
+    //std::cout <<"After erase "<< "stat f -: " << (start ->g_value + start ->h_value) <<" end f -: "<< (end ->g_value + start ->h_value) <<std::endl;
+    this -> open_list.erase(this ->open_list.end());
+    RouteModel::Node *start = *(this->open_list.begin());
+    RouteModel::Node *end = *(this->open_list.end());
+    std::cout <<"After erase "<< "stat f -: " << (start ->g_value + start ->h_value) <<" end f -: "<< (end ->g_value + start ->h_value) <<std::endl;
+    std::cout <<" After remove Array size -: " << this->open_list.size() <<std::endl;
+    std::cout << "long -: " <<end->x << " lat -: "  <<end->y << std::endl;
+    return end;
 }
 
+
+//Node(int idx, RouteModel * search_model, Model::Node node)
 // TODO 6: Complete the ConstructFinalPath method to return the final path found from your A* search.
 // Tips:
 // - This method should take the current (final) node as an argument and iteratively follow the
@@ -105,11 +114,20 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
 
 void RoutePlanner::AStarSearch()
 {
+    std::cout << "starting first " <<std::endl;
     RouteModel::Node *current_node = this->start_node;
+    current_node ->h_value = this->CalculateHValue(current_node);
+    current_node ->g_value = 0.0f;
 // TODO: Implement your solution here.
-    while(current_node != this->end_node) {
+   std::cout << "starting second" <<std::endl;
+    while((current_node != this->end_node) && (current_node != nullptr)) {
+        std::cout << "First inside while" <<std::endl;
+        std::cout << "long -: " <<current_node -> x << " lat -: "  <<current_node -> y << std::endl;
         this -> AddNeighbors(current_node);
+        std::cout << "After AddNeighbors(current_node)" <<std::endl;
         current_node = this -> NextNode();
+        std::cout << "long -: " <<current_node -> x << " lat -: "  <<current_node -> y << std::endl;
+        std::cout << "After  NextNode() -: " <<std::endl;
     }
     this ->m_Model.path = this -> ConstructFinalPath(current_node);
 }

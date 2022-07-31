@@ -23,6 +23,17 @@ class RouteModel : public Model {
             return std::sqrt(std::pow((x - other.x), 2) + std::pow((y - other.y), 2));
         }
 
+        Node(RouteModel::Node* original)
+        {
+          this ->h_value = original ->h_value;
+          this ->g_value = original ->g_value;
+          this ->parent = original ->parent;
+          this ->neighbors = original ->neighbors;
+          this ->visited = original ->visited;
+          this ->index = original ->index;
+          this ->parent_model = original ->parent_model;
+        }
+        
         Node(){}
         Node(int idx, RouteModel * search_model, Model::Node node) : Model::Node(node), parent_model(search_model), index(idx) {}
 
