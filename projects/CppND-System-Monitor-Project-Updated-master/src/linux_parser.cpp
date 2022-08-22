@@ -2,7 +2,6 @@
 
 #include <dirent.h>
 #include <unistd.h>
-#include <filesystem>
 #include <string>
 #include <vector>
 
@@ -13,56 +12,19 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-// DONE: An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
   Parsers::OperatingSystemFileParser operatingSystemFileParser{kOSPath};
   return operatingSystemFileParser.parseOperatingSystemFile();
 }
 
-// DONE: An example of how to read data from the filesystem
 string LinuxParser::Kernel() {
   Parsers::KernelFileParser kernelFileParser{kProcDirectory + kVersionFilename};
   return kernelFileParser.parseKernelFile();
 }
 
-// BONUS: Update this to use std::filesystem
-vector<int> LinuxParser::Pids() {
-  vector<int> pids;
-  DIR* directory = opendir(kProcDirectory.c_str());
-  struct dirent* file;
-  while ((file = readdir(directory)) != nullptr) {
-    // Is this a directory?
-    if (file->d_type == DT_DIR) {
-      // Is every character of the name a digit?
-      string filename(file->d_name);
-      if (std::all_of(filename.begin(), filename.end(), isdigit)) {
-        int pid = stoi(filename);
-        pids.push_back(pid);
-      }
-    }
-  }
-  closedir(directory);
-  return pids;
-}
-
-vector<int> Pids2() {
-  vector<int> pids;
-  DIR* directory = opendir(LinuxParser::kProcDirectory.c_str());
-  struct dirent* file;
- const std::filesystem::path proc_dir{LinuxParser::kProcDirectory.c_str()};
- for (auto const& dir_entry : std::filesystem::directory_iterator{proc_dir}) 
-    {
-      if(dir_entry.is_directory()) {
-      std::filesystem::path p = dir_entry.path();
-      std::string filename = p.filename();
-      if (std::all_of( filename.begin(),  filename.end(), isdigit)) {
-        int pid = stoi(filename);
-        pids.push_back(pid);
-      }
-      }
-    }
-    return pids;
-  return pids;
+vector<int> Pids() {
+  Parsers::PidsFilesParser pidsFilesParser{LinuxParser::kProcDirectory.c_str()};
+  return  pidsFilesParser.parsePidsFiles();
 }
 // TODO: Read and return the system memory utilization
 float LinuxParser::MemoryUtilization() { return 0.0; }
