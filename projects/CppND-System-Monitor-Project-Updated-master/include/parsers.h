@@ -56,6 +56,14 @@ class SystemUptimeFileParser : public parser {
  private:
   long roundFloatToLong(float number) { return std::lroundf(number); }
 };
+
+class SystemJiffiesReader : public parser {
+ public:
+  SystemJiffiesReader() {}
+  SystemJiffiesReader(std::string path) : parser(path) {}
+  long getSystemJiffies();
+};
+
 };  // namespace Parsers
 
 #endif

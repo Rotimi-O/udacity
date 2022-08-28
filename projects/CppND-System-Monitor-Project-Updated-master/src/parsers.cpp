@@ -72,6 +72,7 @@ float Parsers::MemInfoFilesParser::parseMemInfoFile() {
         std::cout << entryName << quantity << unit << std::endl;
         freeMemory = std::stod(quantity);
         std::cout << freeMemory << std::endl;
+        break;
       }
     }
   }
@@ -95,3 +96,30 @@ long Parsers::SystemUptimeFileParser::parseSystemUptimeFile() {
 return roundFloatToLong(totalSystemUptime);
 }
 
+long Parsers::SystemJiffiesReader::getSystemJiffies() {
+  
+  std::string entry{""};
+  std::string user{""};
+  std::string nice{""};
+  std::string systemmode{""};
+  std::string idle{""};
+  std::string iowait{""};
+  std::string irq{""};
+  std::string softirq{""};
+  std::string line{""};
+  long jiffies{0l};
+
+  std::ifstream filestream(path);
+  if (filestream.is_open()) {
+    while (std::getline(filestream, line)) {
+      std::istringstream linestream(line);
+      linestream >>entry >>user >>nice >>systemmode >>idle >>iowait >>irq >>softirq;
+      if (entry.compare("cpu") == 0) {
+        jiffies = std::stol(user) + std::stol(nice) + std::stol(systemmode) + std::stol(idle)+
+        std::stol(iowait) + std::stol(irq) + std::stol(softirq);
+        break;
+      }
+    }
+}
+return jiffies;
+}
