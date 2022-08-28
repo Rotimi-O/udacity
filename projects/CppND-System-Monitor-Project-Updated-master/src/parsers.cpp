@@ -54,7 +54,6 @@ std::vector<int> Parsers::PidsFilesParser::parsePidsFiles() {
 }
 
 float Parsers::MemInfoFilesParser::parseMemInfoFile() {
-  std::string path = "/proc/meminfo";
   std::string entryName{""}, unit{""};
   std::string quantity{""};
   float totalMemory{0.0};
@@ -80,3 +79,19 @@ float Parsers::MemInfoFilesParser::parseMemInfoFile() {
   std::cout << usedMemory << std::endl;
   return usedMemory;
 }
+
+long Parsers::SystemUptimeFileParser::parseSystemUptimeFile() {
+  std::string totalUptime{""}, totalCoreIdletime{""};
+  long totalSystemUptime{0l};
+  std::string line{""};
+  std::ifstream filestream(path);
+  if (filestream.is_open()) {
+    while (std::getline(filestream, line)) {
+      std::istringstream linestream(line);
+      linestream >> totalUptime >> totalCoreIdletime;
+      totalSystemUptime = std::stol(totalUptime);
+    }
+}
+return roundFloatToLong(totalSystemUptime);
+}
+

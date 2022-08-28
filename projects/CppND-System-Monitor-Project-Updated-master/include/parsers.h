@@ -1,6 +1,7 @@
 #ifndef PARSERS_H
 #define PARSERS_H
 
+#include <cmath>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -44,6 +45,16 @@ class MemInfoFilesParser : public parser {
   MemInfoFilesParser() {}
   MemInfoFilesParser(std::string path) : parser(path) {}
   float parseMemInfoFile();
+};
+
+class SystemUptimeFileParser : public parser {
+ public:
+  SystemUptimeFileParser() {}
+  SystemUptimeFileParser(std::string path) : parser(path) {}
+  long parseSystemUptimeFile();
+
+ private:
+  long roundFloatToLong(float number) { return std::lroundf(number); }
 };
 };  // namespace Parsers
 
