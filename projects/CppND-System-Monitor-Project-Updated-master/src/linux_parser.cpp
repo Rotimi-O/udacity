@@ -26,8 +26,11 @@ vector<int> Pids() {
   Parsers::PidsFilesParser pidsFilesParser{LinuxParser::kProcDirectory.c_str()};
   return  pidsFilesParser.parsePidsFiles();
 }
-// TODO: Read and return the system memory utilization
-float LinuxParser::MemoryUtilization() { return 0.0; }
+
+float LinuxParser::MemoryUtilization() {
+  Parsers::MemInfoFilesParser memInfoFilesParser(kProcDirectory + kMeminfoFilename);
+  return memInfoFilesParser.parseMemInfoFile();  
+}
 
 // TODO: Read and return the system uptime
 long LinuxParser::UpTime() { return 0; }
