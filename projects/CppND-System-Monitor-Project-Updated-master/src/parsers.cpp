@@ -53,12 +53,12 @@ std::vector<int> Parsers::PidsFilesParser::parsePidsFiles() {
   return pids;
 }
 
-double Parsers::MemInfoFilesParser::parseMemInfoFile() {
+float Parsers::MemInfoFilesParser::parseMemInfoFile() {
   std::string path = "/proc/meminfo";
   std::string entryName{""}, unit{""};
   std::string quantity{""};
-  double totalMemory{0.0};
-  double freeMemory{0.0};
+  float totalMemory{0.0};
+  float freeMemory{0.0};
   std::string line{""};
   std::ifstream filestream(path);
   if (filestream.is_open()) {
@@ -76,7 +76,7 @@ double Parsers::MemInfoFilesParser::parseMemInfoFile() {
       }
     }
   }
-  double usedMemory = (totalMemory - freeMemory) * 100.0 / totalMemory;
+  float usedMemory = (totalMemory - freeMemory) * 100.0 / totalMemory;
   std::cout << usedMemory << std::endl;
   return usedMemory;
 }

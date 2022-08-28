@@ -1,12 +1,12 @@
 #ifndef PARSERS_H
 #define PARSERS_H
 
+#include <filesystem>
+#include <fstream>
+#include <iostream>
 #include <regex>
 #include <string>
-#include <filesystem>
 #include <vector>
-#include <iostream>
-#include <fstream>
 
 namespace Parsers {
 class parser {
@@ -43,8 +43,8 @@ class MemInfoFilesParser : public parser {
  public:
   MemInfoFilesParser() {}
   MemInfoFilesParser(std::string path) : parser(path) {}
-  double parseMemInfoFile();
-};  
+  float parseMemInfoFile();
+};
 };  // namespace Parsers
 
 #endif
