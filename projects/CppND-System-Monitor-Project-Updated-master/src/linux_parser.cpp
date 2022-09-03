@@ -42,7 +42,7 @@ float LinuxParser::MemoryUtilization() {
 
   long LinuxParser::Jiffies() {
 	  SystemData::SystemJiffiesReader systemJiffiesReader{kProcDirectory + kStatFilename};
-    return systemJiffiesReader.getSystemJiffies();
+    return systemJiffiesReader.SystemJiffies();
   }
 
   // TODO: Read and return the number of active jiffies for a PID

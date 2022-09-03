@@ -32,9 +32,9 @@ class SystemUptimeFileParser : public Parsers::parser {
 class SystemJiffiesReader : public Parsers::parser {
  public:
   SystemJiffiesReader() {}
-	SystemJiffiesReader(std::string path) :
-			parser(path) {}
-  long getSystemJiffies();
+	SystemJiffiesReader(std::string path) : parser(path) {}
+	long ActiveJiffies(int pid);
+	long SystemJiffies();
 };
 
 
