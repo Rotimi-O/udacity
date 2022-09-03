@@ -2,11 +2,14 @@
 
 #include "system_data_parsers.h"
 
+using std::string;
+using std::to_string;
+
 std::string SystemData::OperatingSystemFileParser::parseOperatingSystemFile() {
 	std::string line { "" };
 	std::string key { "" };
 	std::string value { "" };
-	std::ifstream filestream(path);
+	std::ifstream filestream(filepath);
 	if (filestream.is_open()) {
 		while (std::getline(filestream, line)) {
 			std::replace(line.begin(), line.end(), ' ', '_');
@@ -27,7 +30,7 @@ std::string SystemData::OperatingSystemFileParser::parseOperatingSystemFile() {
 std::string SystemData::KernelFileParser::parseKernelFile() {
 	std::string os { "" }, version { "" }, kernel { "" };
 	std::string line { "" };
-	std::ifstream stream(path);
+	std::ifstream stream(filepath);
 	if (stream.is_open()) {
 		std::getline(stream, line);
 		std::istringstream linestream(line);
@@ -40,7 +43,7 @@ long SystemData::SystemUptimeFileParser::parseSystemUptimeFile() {
 	std::string totalUptime { "" }, totalCoreIdletime { "" };
 	long totalSystemUptime { 0l };
 	std::string line { "" };
-	std::ifstream filestream(path);
+	std::ifstream filestream(filepath);
 	if (filestream.is_open()) {
 		while (std::getline(filestream, line)) {
 			std::istringstream linestream(line);
@@ -56,7 +59,7 @@ long SystemData::SystemJiffiesReader::getSystemJiffies() {
 	std::string line { "" };
 	long jiffies { 0l };
 
-	std::ifstream filestream(path);
+	std::ifstream filestream(filepath);
 	if (filestream.is_open()) {
 		int idx = 0;
 		std::string word;
@@ -87,5 +90,33 @@ long SystemData::SystemJiffiesReader::getSystemJiffies() {
 		}
 	}
 	return jiffies;
+}
+
+float SystemData::MemInfoFilesParser::parseMemInfoFile() {
+  std::string entryName{""}, unit{""};
+  std::string quantity{""};
+  float totalMemory{0.0};
+  float freeMemory{0.0};
+  std::string line{""};
+  std::ifstream filestream(filepath);
+  if (filestream.is_open()) {
+    while (std::getline(filestream, line)) {
+      std::istringstream linestream(line);
+      linestream >> entryName >> quantity >> unit;
+      if (entryName.compare("MemTotal:") == 0) {
+        std::cout << entryName << quantity << unit << std::endl;
+        totalMemory = std::stod(quantity);
+        std::cout << totalMemory << std::endl;
+      } else if (entryName.compare("MemFree:") == 0) {
+        std::cout << entryName << quantity << unit << std::endl;
+        freeMemory = std::stod(quantity);
+        std::cout << freeMemory << std::endl;
+        break;
+      }
+    }
+  }
+  float usedMemory = (totalMemory - freeMemory) * 100.0 / totalMemory;
+  std::cout << usedMemory << std::endl;
+  return usedMemory;
 }
 

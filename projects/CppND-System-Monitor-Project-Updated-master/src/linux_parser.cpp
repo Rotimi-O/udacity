@@ -8,6 +8,7 @@
 
 #include "parsers.h"
 #include "system_data_parsers.h"
+#include "process_data_parsers.h"
 
 using std::stof;
 using std::string;
@@ -25,12 +26,12 @@ string LinuxParser::Kernel() {
 }
 
 vector<int> Pids() {
-  Parsers::PidsFilesParser pidsFilesParser{LinuxParser::kProcDirectory.c_str()};
+  ProcessData::PidsFilesParser pidsFilesParser{LinuxParser::kProcDirectory.c_str()};
   return pidsFilesParser.parsePidsFiles();
 }
 
 float LinuxParser::MemoryUtilization() {
-  Parsers::MemInfoFilesParser memInfoFilesParser{kProcDirectory + kMeminfoFilename};
+  SystemData::MemInfoFilesParser memInfoFilesParser{kProcDirectory + kMeminfoFilename};
   return memInfoFilesParser.parseMemInfoFile();
 }
 

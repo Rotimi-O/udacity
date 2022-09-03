@@ -32,8 +32,17 @@ class SystemUptimeFileParser : public Parsers::parser {
 class SystemJiffiesReader : public Parsers::parser {
  public:
   SystemJiffiesReader() {}
-  SystemJiffiesReader(std::string path) : parser(path) {}
+	SystemJiffiesReader(std::string path) :
+			parser(path) {}
   long getSystemJiffies();
+};
+
+
+class MemInfoFilesParser : public Parsers::parser {
+ public:
+  MemInfoFilesParser() {}
+  MemInfoFilesParser(std::string path) : parser(path) {}
+  float parseMemInfoFile();
 };
 
 }; // namespace SystemData
