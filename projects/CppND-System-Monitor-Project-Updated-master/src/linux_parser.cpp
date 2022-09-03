@@ -45,16 +45,20 @@ float LinuxParser::MemoryUtilization() {
     return systemJiffiesReader.SystemJiffies();
   }
 
-  // TODO: Read and return the number of active jiffies for a PID
-  // REMOVE: [[maybe_unused]] once you define the function
-  long LinuxParser::ActiveJiffies(int pid [[maybe_unused]]) { 
-    return 0; }
+  long LinuxParser::ActiveJiffies(int pid) {
+	  SystemData::SystemJiffiesReader systemJiffiesReader{kProcDirectory};
+	  return systemJiffiesReader.ActiveJiffies(pid);
+  }
 
-  // TODO: Read and return the number of active jiffies for the system
-  long LinuxParser::ActiveJiffies() { return 0; }
+  long LinuxParser::ActiveJiffies() {
+	  SystemData::SystemJiffiesReader systemJiffiesReader{kProcDirectory + kStatFilename};
+	      return systemJiffiesReader.ActiveJiffies();
+  }
 
-  // TODO: Read and return the number of idle jiffies for the system
-  long LinuxParser::IdleJiffies() { return 0; }
+  long LinuxParser::IdleJiffies() {
+	  SystemData::SystemJiffiesReader systemJiffiesReader{kProcDirectory + kStatFilename};
+	      return systemJiffiesReader.IdleJiffies();
+  }
 
   // TODO: Read and return CPU utilization
   vector<string> LinuxParser::CpuUtilization() { return {}; }
