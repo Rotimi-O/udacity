@@ -3,39 +3,6 @@
 using std::string;
 using std::to_string;
 
-std::string Parsers::OperatingSystemFileParser::parseOperatingSystemFile() {
-  std::string line{""};
-  std::string key{""};
-  std::string value{""};
-  std::ifstream filestream(path);
-  if (filestream.is_open()) {
-    while (std::getline(filestream, line)) {
-      std::replace(line.begin(), line.end(), ' ', '_');
-      std::replace(line.begin(), line.end(), '=', ' ');
-      std::replace(line.begin(), line.end(), '"', ' ');
-      std::istringstream linestream(line);
-      while (linestream >> key >> value) {
-        if (key == "PRETTY_NAME") {
-          std::replace(value.begin(), value.end(), '_', ' ');
-          return value;
-        }
-      }
-    }
-  }
-  return value;
-}
-
-std::string Parsers::KernelFileParser::parseKernelFile() {
-  std::string os{""}, version{""}, kernel{""};
-  std::string line{""};
-  std::ifstream stream(path);
-  if (stream.is_open()) {
-    std::getline(stream, line);
-    std::istringstream linestream(line);
-    linestream >> os >> version >> kernel;
-  }
-  return kernel;
-}
 
 std::vector<int> Parsers::PidsFilesParser::parsePidsFiles() {
   const std::filesystem::path proc_dir{path};
@@ -79,47 +46,4 @@ float Parsers::MemInfoFilesParser::parseMemInfoFile() {
   float usedMemory = (totalMemory - freeMemory) * 100.0 / totalMemory;
   std::cout << usedMemory << std::endl;
   return usedMemory;
-}
-
-long Parsers::SystemUptimeFileParser::parseSystemUptimeFile() {
-  std::string totalUptime{""}, totalCoreIdletime{""};
-  long totalSystemUptime{0l};
-  std::string line{""};
-  std::ifstream filestream(path);
-  if (filestream.is_open()) {
-    while (std::getline(filestream, line)) {
-      std::istringstream linestream(line);
-      linestream >> totalUptime >> totalCoreIdletime;
-      totalSystemUptime = std::stol(totalUptime);
-    }
-}
-return roundFloatToLong(totalSystemUptime);
-}
-
-long Parsers::SystemJiffiesReader::getSystemJiffies() {
-  
-  std::string entry{""};
-  std::string user{""};
-  std::string nice{""};
-  std::string systemmode{""};
-  std::string idle{""};
-  std::string iowait{""};
-  std::string irq{""};
-  std::string softirq{""};
-  std::string line{""};
-  long jiffies{0l};
-
-  std::ifstream filestream(path);
-  if (filestream.is_open()) {
-    while (std::getline(filestream, line)) {
-      std::istringstream linestream(line);
-      linestream >>entry >>user >>nice >>systemmode >>idle >>iowait >>irq >>softirq;
-      if (entry.compare("cpu") == 0) {
-        jiffies = std::stol(user) + std::stol(nice) + std::stol(systemmode) + std::stol(idle)+
-        std::stol(iowait) + std::stol(irq) + std::stol(softirq);
-        break;
-      }
-    }
-}
-return jiffies;
 }

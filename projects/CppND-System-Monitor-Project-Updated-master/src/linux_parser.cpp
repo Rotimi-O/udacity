@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "parsers.h"
+#include "system_data_parsers.h"
 
 using std::stof;
 using std::string;
@@ -14,12 +15,12 @@ using std::to_string;
 using std::vector;
 
 string LinuxParser::OperatingSystem() {
-  Parsers::OperatingSystemFileParser operatingSystemFileParser{kOSPath};
+	SystemData::OperatingSystemFileParser operatingSystemFileParser{kOSPath};
   return operatingSystemFileParser.parseOperatingSystemFile();
 }
 
 string LinuxParser::Kernel() {
-  Parsers::KernelFileParser kernelFileParser{kProcDirectory + kVersionFilename};
+	SystemData::KernelFileParser kernelFileParser{kProcDirectory + kVersionFilename};
   return kernelFileParser.parseKernelFile();
 }
 
@@ -34,12 +35,12 @@ float LinuxParser::MemoryUtilization() {
 }
 
   long LinuxParser::UpTime() {
-    Parsers::SystemUptimeFileParser systemUptimeFileParser{kProcDirectory + kUptimeFilename};
+	  SystemData::SystemUptimeFileParser systemUptimeFileParser{kProcDirectory + kUptimeFilename};
     return systemUptimeFileParser.parseSystemUptimeFile();
   }
 
   long LinuxParser::Jiffies() {
-    Parsers::SystemJiffiesReader systemJiffiesReader{kProcDirectory + kStatFilename};
+	  SystemData::SystemJiffiesReader systemJiffiesReader{kProcDirectory + kStatFilename};
     return systemJiffiesReader.getSystemJiffies();
   }
 
