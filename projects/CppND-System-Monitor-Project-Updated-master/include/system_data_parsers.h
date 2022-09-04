@@ -48,15 +48,17 @@ public:
 			parser(path) {
 	}
 
+	std::vector<std::string> Jiffies();
 	long SystemJiffies();
 	long IdleJiffies();
 	long ActiveJiffies();
 	long ActiveJiffies(int pid);
 
 private:
-	long GetJiffies(std::ifstream &filestream, int startEntry, int endEntry);
-	long GetJiffies(std::ifstream &filestream, int rangeStart, int rangeEnd,
-			const std::string &token);
+	long GetJiffies(int rangeStart, int rangeEnd);
+	std::vector<std::string> GetJiffies();
+	long GetJiffies(int rangeStart, int rangeEnd,  const std::string &token);
+	std::vector<std::string> GetJiffies(const std::string &token);
 };
 
 class MemInfoFilesParser: public Parsers::parser {
