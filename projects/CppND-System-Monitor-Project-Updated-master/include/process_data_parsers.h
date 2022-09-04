@@ -12,6 +12,8 @@ public:
 			parser(path) {
 	}
 	std::vector<int> parsePidsFiles();
+
+	int Processes();
 };
 }
 #endif

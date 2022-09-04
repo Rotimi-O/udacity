@@ -73,9 +73,11 @@ vector<string> LinuxParser::CpuUtilization() {
 	return systemJiffiesReader.Jiffies();
 }
 
-// TODO: Read and return the total number of processes
 int LinuxParser::TotalProcesses() {
-	return 0;
+	ProcessData::PidsFilesParser pidsFilesParser {
+				LinuxParser::kProcDirectory
+				+ LinuxParser::kStatFilename };
+		return pidsFilesParser.Processes();
 }
 
 // TODO: Read and return the number of running processes
