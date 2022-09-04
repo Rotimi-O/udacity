@@ -16,7 +16,7 @@ std::vector<int> ProcessData::PidsFilesParser::parsePidsFiles() {
 	return pids;
 }
 
-int ProcessData::PidsFilesParser::Processes() {
+int ProcessData::PidsFilesParser::Processes(std::string token) {
 	std::string line { "" };
 	std::string processes { "0" };
 	std::ifstream filestream(filepath);
@@ -26,7 +26,7 @@ int ProcessData::PidsFilesParser::Processes() {
 
 			std::string word;
 			linestream >> word;
-			if (word.compare("processes") == 0) {
+			if (word.compare(token) == 0) {
 
 				linestream.seekg(0);
 				linestream >> word >> processes;

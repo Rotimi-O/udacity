@@ -77,12 +77,14 @@ int LinuxParser::TotalProcesses() {
 	ProcessData::PidsFilesParser pidsFilesParser {
 				LinuxParser::kProcDirectory
 				+ LinuxParser::kStatFilename };
-		return pidsFilesParser.Processes();
+		return pidsFilesParser.Processes("processes");
 }
 
-// TODO: Read and return the number of running processes
 int LinuxParser::RunningProcesses() {
-	return 0;
+	ProcessData::PidsFilesParser pidsFilesParser {
+					LinuxParser::kProcDirectory
+					+ LinuxParser::kStatFilename };
+			return pidsFilesParser.Processes("procs_running");
 }
 
 // TODO: Read and return the command associated with a process

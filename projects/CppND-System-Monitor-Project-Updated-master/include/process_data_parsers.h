@@ -13,7 +13,7 @@ public:
 	}
 	std::vector<int> parsePidsFiles();
 
-	int Processes();
+	int Processes(std::string token);
 };
 }
 #endif
