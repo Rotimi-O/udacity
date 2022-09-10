@@ -14,6 +14,8 @@ public:
 	std::vector<int> parsePidsFiles();
 
 	int Processes(std::string token);
+
+	std::string ProcessCommand(int pid);
 };
 }
 #endif
