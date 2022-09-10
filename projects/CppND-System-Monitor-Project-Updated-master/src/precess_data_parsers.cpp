@@ -40,32 +40,23 @@ int ProcessData::PidsFilesParser::Processes(std::string token) {
 std::string ProcessData::PidsFilesParser::ProcessCommand(int pid) {
 	const std::filesystem::path proc_dir { filepath };
 	std::string processCommand { "" };
-	for (auto const &dir_entry : std::filesystem::directory_iterator { proc_dir }) {
-		if (dir_entry.is_directory()) {
-			std::filesystem::path p = dir_entry.path();
-			std::string filename = p.filename();
 
-			if (std::all_of(filename.begin(), filename.end(), isdigit)) {
-				int pidloc = stoi(filename);
-				if (pidloc == pid) {
-					std::string line { "" };
-					int idx = 0;
-					std::ifstream filestream(filepath);
+	if (PidDirectoryExists(pid)) {
+		std::string line { "" };
+		int idx = 0;
+		std::ifstream filestream(filepath);
 
-					if (filestream.is_open()) {
-						int pid;
-						std::string processCommandP { "" };
+		if (filestream.is_open()) {
+			int pid;
+			std::string processCommandP { "" };
 
-						while (std::getline(filestream, line)) {
-							std::istringstream linestream(line);
-							linestream.seekg(idx);
-							linestream >> pid >> processCommandP;
-							processCommand = processCommandP.substr(1,
-									processCommandP.length() - 1);
-							break;
-						}
-					}
-				}
+			while (std::getline(filestream, line)) {
+				std::istringstream linestream(line);
+				linestream.seekg(idx);
+				linestream >> pid >> processCommandP;
+				processCommand = processCommandP.substr(1,
+						processCommandP.length() - 1);
+				break;
 			}
 		}
 	}

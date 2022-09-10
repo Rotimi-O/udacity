@@ -21,8 +21,7 @@ string LinuxParser::OperatingSystem() {
 }
 
 string LinuxParser::Kernel() {
-	SystemData::KernelFileParser kernelFileParser { kProcDirectory
-			+ kVersionFilename };
+	SystemData::KernelFileParser kernelFileParser { kProcDirectory, kVersionFilename };
 	return kernelFileParser.parseKernelFile();
 }
 
@@ -33,50 +32,43 @@ vector<int> Pids() {
 }
 
 float LinuxParser::MemoryUtilization() {
-	SystemData::MemInfoFilesParser memInfoFilesParser { kProcDirectory
-			+ kMeminfoFilename };
+	SystemData::MemInfoFilesParser memInfoFilesParser { kProcDirectory, kMeminfoFilename };
 	return memInfoFilesParser.parseMemInfoFile();
 }
 
 long LinuxParser::UpTime() {
-	SystemData::SystemUptimeFileParser systemUptimeFileParser { kProcDirectory
-			+ kUptimeFilename };
+	SystemData::SystemUptimeFileParser systemUptimeFileParser { kProcDirectory, kUptimeFilename };
 	return systemUptimeFileParser.parseSystemUptimeFile();
 }
 
 long LinuxParser::Jiffies() {
-	SystemData::SystemJiffiesReader systemJiffiesReader { kProcDirectory
-			+ kStatFilename };
+	SystemData::SystemJiffiesReader systemJiffiesReader { kProcDirectory, kStatFilename };
 	return systemJiffiesReader.SystemJiffies();
 }
 
 long LinuxParser::ActiveJiffies(int pid) {
-	SystemData::SystemJiffiesReader systemJiffiesReader { kProcDirectory };
+	SystemData::SystemJiffiesReader systemJiffiesReader { kProcDirectory, std::to_string(pid)};
 	return systemJiffiesReader.ActiveJiffies(pid);
 }
 
 long LinuxParser::ActiveJiffies() {
-	SystemData::SystemJiffiesReader systemJiffiesReader { kProcDirectory
-			+ kStatFilename };
+	SystemData::SystemJiffiesReader systemJiffiesReader { kProcDirectory, kStatFilename };
 	return systemJiffiesReader.ActiveJiffies();
 }
 
 long LinuxParser::IdleJiffies() {
-	SystemData::SystemJiffiesReader systemJiffiesReader { kProcDirectory
-			+ kStatFilename };
+	SystemData::SystemJiffiesReader systemJiffiesReader { kProcDirectory, kStatFilename };
 	return systemJiffiesReader.IdleJiffies();
 }
 
 vector<string> LinuxParser::CpuUtilization() {
-	SystemData::SystemJiffiesReader systemJiffiesReader { kProcDirectory
-			+ kStatFilename };
+	SystemData::SystemJiffiesReader systemJiffiesReader { kProcDirectory, kStatFilename };
 	return systemJiffiesReader.Jiffies();
 }
 
 int LinuxParser::TotalProcesses() {
 	ProcessData::PidsFilesParser pidsFilesParser {
-				LinuxParser::kProcDirectory
-				+ LinuxParser::kStatFilename };
+				LinuxParser::kProcDirectory, LinuxParser::kStatFilename };
 		return pidsFilesParser.Processes("processes");
 }
 

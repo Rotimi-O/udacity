@@ -14,12 +14,26 @@ class parser {
 public:
 	parser() {
 	}
-	parser(std::string path) :
-			filepath { path } {
-	}
+
+	parser(std::string filepathin) :
+			filepath(filepathin) {}
+
+
+	parser(std::string topdirin, std::string filename) :
+		filepath(topdirin + filename) {}
 
 protected:
 	std::string filepath { "" };
+	std::string topdir { "" };
+	std::string subdir { "" };
+
+	bool PidDirectoryExists(int pid);
+
+	void buildfilepath(std::string filename) :
+					filepath(topdir + subdir + filename) {}
+
+	void buildfilepath() :
+						filepath(procdir) {}
 };
 
 }

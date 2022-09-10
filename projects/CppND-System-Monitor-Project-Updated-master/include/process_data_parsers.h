@@ -16,6 +16,8 @@ public:
 	int Processes(std::string token);
 
 	std::string ProcessCommand(int pid);
+private:
+	std::string ReadFile(std::string path);
 };
 }
 #endif
