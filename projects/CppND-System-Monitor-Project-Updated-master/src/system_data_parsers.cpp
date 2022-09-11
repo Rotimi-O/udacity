@@ -126,13 +126,12 @@ std::vector<string> SystemData::SystemJiffiesReader::Jiffies() {
 }
 
 long SystemData::SystemJiffiesReader::ActiveJiffies(int pid) {
-	const std::filesystem::path proc_dir { filepath };
 	long jiffies = 0;
 
 	if (PidDirectoryExists(pid)) {
-		std::string path1 = filepath + filename + "/stat";
-		std::cout << "file -: " << path1 << std::endl;
-		std::ifstream filestream(path1);
+		buildfilepath(filepath, "/stat");
+		std::cout << "file -: " << filepath << std::endl;
+		std::ifstream filestream(filepath);
 		if (filestream.is_open()) {
 			jiffies = GetJiffies(13, 16);
 		}

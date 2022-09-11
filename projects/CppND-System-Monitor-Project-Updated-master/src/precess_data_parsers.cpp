@@ -1,7 +1,7 @@
 #include "process_data_parsers.h"
 
 std::vector<int> ProcessData::PidsFilesParser::parsePidsFiles() {
-	const std::filesystem::path proc_dir { filepath };
+	const std::filesystem::path proc_dir { topdir };
 	std::vector<int> pids;
 	for (auto const &dir_entry : std::filesystem::directory_iterator { proc_dir }) {
 		if (dir_entry.is_directory()) {
@@ -38,7 +38,6 @@ int ProcessData::PidsFilesParser::Processes(std::string token) {
 }
 
 std::string ProcessData::PidsFilesParser::ProcessCommand(int pid) {
-	const std::filesystem::path proc_dir { filepath };
 	std::string processCommand { "" };
 
 	if (PidDirectoryExists(pid)) {

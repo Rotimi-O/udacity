@@ -8,9 +8,9 @@ class PidsFilesParser: public Parsers::parser {
 public:
 	PidsFilesParser() {
 	}
-	PidsFilesParser(std::string path) :
-			parser(path) {
-	}
+
+
+
 	std::vector<int> parsePidsFiles();
 
 	int Processes(std::string token);

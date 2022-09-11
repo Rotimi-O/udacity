@@ -15,25 +15,40 @@ public:
 	parser() {
 	}
 
-	parser(std::string filepathin) :
-			filepath(filepathin) {}
+	bool PidDirectoryExists(int pid);
 
+	void buildfilepath(std::string filepathname) {
+		buildpath(filepathname);
+	}
 
-	parser(std::string topdirin, std::string filename) :
-		filepath(topdirin + filename) {}
+	void buildfilepath(std::string dirname, std::string filename) {
+		buildpath(dirname, filename);
+	}
+
+	void buildfilepath(std::string dirname, std::string subdirname,
+			std::string filename) {
+		buildpath(dirname, subdirname, filename);
+	}
 
 protected:
 	std::string filepath { "" };
 	std::string topdir { "" };
-	std::string subdir { "" };
+private:
+	void buildpath(std::string filepathname) {
+		filepath = filepathname;
+		topdir = filepathname;
+	}
 
-	bool PidDirectoryExists(int pid);
+	void buildpath(std::string dirname, std::string filename) {
+		filepath = dirname + filename;
+		topdir = dirname;
+	}
 
-	void buildfilepath(std::string filename) :
-					filepath(topdir + subdir + filename) {}
-
-	void buildfilepath() :
-						filepath(procdir) {}
+	void buildpath(std::string dirname, std::string subdirname,
+			std::string filename) {
+		filepath = dirname + subdirname + filename;
+		topdir = dirname;
+	}
 };
 
 }

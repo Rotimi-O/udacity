@@ -1,7 +1,7 @@
 #include "parsers.h"
 
 bool Parsers::parser::PidDirectoryExists(int pid) {
-	const std::filesystem::path proc_dir { filepath };
+	const std::filesystem::path proc_dir = topdir;
 	std::string processCommand { "" };
 	for (auto const &dir_entry : std::filesystem::directory_iterator { proc_dir }) {
 		if (dir_entry.is_directory()) {
