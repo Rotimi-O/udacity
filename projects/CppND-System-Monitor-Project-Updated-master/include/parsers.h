@@ -8,6 +8,7 @@
 #include <regex>
 #include <string>
 #include <vector>
+#include <unistd.h>
 
 namespace Parsers {
 class parser {

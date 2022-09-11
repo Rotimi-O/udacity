@@ -18,6 +18,8 @@ public:
 	std::string ProcessCommand(int pid);
 
 	std::string Ram(int pid);
+
+	std::string Uid(int pid);
 };
 }
 #endif

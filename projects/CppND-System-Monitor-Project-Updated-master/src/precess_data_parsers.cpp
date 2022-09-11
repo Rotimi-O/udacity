@@ -73,15 +73,16 @@ std::string ProcessData::PidsFilesParser::Ram(int pid) {
 		if (filestream.is_open()) {
 
 			while (std::getline(filestream, line)) {
+				std::replace(line.begin(), line.end(), ':', ' ');
 				std::istringstream linestream(line);
-				linestream.seekg(idx);
 
 				std::string word { "" };
 				std::string memunit { "" };
 				int wordlen = 0;
+				int idx = 0;
 				int len = line.length();
 				while (wordlen < len) {
-					linestream.seekg(0); //always start from the start of the line
+					linestream.seekg(idx); //always start from the start of the line
 					linestream >> word;
 					if (word.compare("VmRSS") == 0) {
 
@@ -92,9 +93,48 @@ std::string ProcessData::PidsFilesParser::Ram(int pid) {
 						break;
 					}
 					wordlen = wordlen + word.length() + 1;
+					idx = wordlen + 1;
 				}
 			}
 		}
 	}
 	return ram;
+}
+
+std::string ProcessData::PidsFilesParser::Uid(int pid) {
+	std::string uid { " " };
+
+	if (PidDirectoryExists(pid)) {
+		std::string line { "" };
+		int idx = 0;
+		std::ifstream filestream(filepath);
+
+		if (filestream.is_open()) {
+
+			while (std::getline(filestream, line)) {
+				std::replace(line.begin(), line.end(), ':', ' ');
+				std::istringstream linestream(line);
+
+				std::string word { "" };
+				int wordlen = 0;
+				int idx = 0;
+				int len = line.length();
+				while (wordlen < len) {
+					linestream.seekg(idx); //always start from the start of the line
+					linestream >> word;
+					if (word.compare("Uid") == 0) {
+
+						linestream.seekg(0); //rewind
+						linestream >> word >> uid;
+						std::cout << "Uid values -: " << word << " " << uid
+								<< std::endl;
+						break;
+					}
+					wordlen = wordlen + word.length() + 1;
+					idx = wordlen + 1;
+				}
+			}
+		}
+	}
+	return uid;
 }

@@ -103,14 +103,15 @@ string LinuxParser::Ram(int pid) {
 	return pidsFilesParser.Ram(pid);
 }
 
-// TODO: Read and return the user ID associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
+
 string LinuxParser::Uid(int pid [[maybe_unused]]) {
-	return string();
+	ProcessData::PidsFilesParser pidsFilesParser;
+		pidsFilesParser.buildfilepath(LinuxParser::kProcDirectory,
+				std::to_string(pid), LinuxParser::kStatusFilename);
+		return pidsFilesParser.Uid(pid);
 }
 
-// TODO: Read and return the user associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
+
 string LinuxParser::User(int pid [[maybe_unused]]) {
 	return string();
 }
