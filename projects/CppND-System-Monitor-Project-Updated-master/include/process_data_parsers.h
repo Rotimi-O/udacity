@@ -20,6 +20,8 @@ public:
 	std::string Ram(int pid);
 
 	std::string Uid(int pid);
+
+	std::string User(std::string uid);
 };
 }
 #endif

@@ -104,7 +104,7 @@ string LinuxParser::Ram(int pid) {
 }
 
 
-string LinuxParser::Uid(int pid [[maybe_unused]]) {
+string LinuxParser::Uid(int pid) {
 	ProcessData::PidsFilesParser pidsFilesParser;
 		pidsFilesParser.buildfilepath(LinuxParser::kProcDirectory,
 				std::to_string(pid), LinuxParser::kStatusFilename);
@@ -112,8 +112,14 @@ string LinuxParser::Uid(int pid [[maybe_unused]]) {
 }
 
 
-string LinuxParser::User(int pid [[maybe_unused]]) {
-	return string();
+string LinuxParser::User(int pid) {
+	ProcessData::PidsFilesParser pidsFilesParser;
+			pidsFilesParser.buildfilepath(LinuxParser::kProcDirectory,
+					std::to_string(pid), LinuxParser::kStatusFilename);
+			std::string uid = pidsFilesParser.Uid(pid);
+
+			pidsFilesParser.buildfilepath(LinuxParser::kPasswordPath);
+			return pidsFilesParser.User(uid);
 }
 
 // TODO: Read and return the uptime of a process
