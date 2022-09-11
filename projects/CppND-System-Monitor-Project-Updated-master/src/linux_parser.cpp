@@ -77,29 +77,30 @@ vector<string> LinuxParser::CpuUtilization() {
 
 int LinuxParser::TotalProcesses() {
 	ProcessData::PidsFilesParser pidsFilesParser;
-	 pidsFilesParser.buildfilepath(LinuxParser::kProcDirectory, LinuxParser::kStatFilename);
-		return pidsFilesParser.Processes("processes");
+	pidsFilesParser.buildfilepath(LinuxParser::kProcDirectory,
+			LinuxParser::kStatFilename);
+	return pidsFilesParser.Processes("processes");
 }
 
 int LinuxParser::RunningProcesses() {
 	ProcessData::PidsFilesParser pidsFilesParser;
-	pidsFilesParser.buildfilepath(LinuxParser::kProcDirectory, LinuxParser::kStatFilename);
-			return pidsFilesParser.Processes("procs_running");
+	pidsFilesParser.buildfilepath(LinuxParser::kProcDirectory,
+			LinuxParser::kStatFilename);
+	return pidsFilesParser.Processes("procs_running");
 }
-
 
 string LinuxParser::Command(int pid) {
 	ProcessData::PidsFilesParser pidsFilesParser;
 	pidsFilesParser.buildfilepath(LinuxParser::kProcDirectory,
-			std::to_string(pid),
-			LinuxParser::kStatFilename);
-				return pidsFilesParser.ProcessCommand(pid);
+			std::to_string(pid), LinuxParser::kStatFilename);
+	return pidsFilesParser.ProcessCommand(pid);
 }
 
-// TODO: Read and return the memory used by a process
-// REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Ram(int pid [[maybe_unused]]) {
-	return string();
+string LinuxParser::Ram(int pid) {
+	ProcessData::PidsFilesParser pidsFilesParser;
+	pidsFilesParser.buildfilepath(LinuxParser::kProcDirectory,
+			std::to_string(pid), LinuxParser::kStatusFilename);
+	return pidsFilesParser.Ram(pid);
 }
 
 // TODO: Read and return the user ID associated with a process
