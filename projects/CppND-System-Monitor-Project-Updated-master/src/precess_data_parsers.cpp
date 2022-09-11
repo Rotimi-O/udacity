@@ -153,23 +153,21 @@ std::string ProcessData::PidsFilesParser::User(std::string uid) {
 
 			std::istringstream linestream(line);
 
-			std::string word { "" };
+			std::string throwaway{ "" };
+			std::string userid { "" };
 
 			int wordlen = 0;
 			int idx = 0;
 			int len = line.length();
 			while (wordlen < len) {
 				linestream.seekg(idx); //always start from the start of the line
-				linestream >> word;
-				if (word.compare(uid) == 0) {
-
-					linestream.seekg(0); //rewind
-					linestream >> user;
-					std::cout << "Uid values -: " << word << " " << uid
-							<< std::endl;
+				linestream >> user >> throwaway >> userid;
+				if (userid.compare(uid) == 0) {
+					std::cout << "Uid values -: " << user << " " << throwaway << " " << uid
+												<< std::endl;
 					break;
 				}
-				wordlen = wordlen + word.length() + 1;
+				wordlen = wordlen + user.length() + 1;
 				idx = wordlen + 1;
 			}
 		}
