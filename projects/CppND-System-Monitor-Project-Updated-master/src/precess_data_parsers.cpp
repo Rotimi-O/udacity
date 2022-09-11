@@ -38,25 +38,19 @@ int ProcessData::PidsFilesParser::Processes(std::string token) {
 }
 
 std::string ProcessData::PidsFilesParser::ProcessCommand(int pid) {
-	std::string processCommand { " " };
+	std::string processCommand { "no command line " };
 
 	if (PidDirectoryExists(pid)) {
 		std::string line { "" };
-		int idx = 0;
+
 		std::ifstream filestream(filepath);
 
 		if (filestream.is_open()) {
-			int pid;
-			std::string processCommandP { "" };
-
-			while (std::getline(filestream, line)) {
-				std::istringstream linestream(line);
-				linestream.seekg(idx);
-				linestream >> pid >> processCommandP;
-				processCommand = processCommandP.substr(1,
-						processCommandP.length() - 1);
-				break;
+			std::getline(filestream, line);
+			if (!line.empty() && line.compare(" ") != 0) {
+				processCommand = line;
 			}
+
 		}
 	}
 	return processCommand;
@@ -67,7 +61,6 @@ std::string ProcessData::PidsFilesParser::Ram(int pid) {
 
 	if (PidDirectoryExists(pid)) {
 		std::string line { "" };
-		int idx = 0;
 		std::ifstream filestream(filepath);
 
 		if (filestream.is_open()) {
@@ -106,7 +99,6 @@ std::string ProcessData::PidsFilesParser::Uid(int pid) {
 
 	if (PidDirectoryExists(pid)) {
 		std::string line { "" };
-		int idx = 0;
 		std::ifstream filestream(filepath);
 
 		if (filestream.is_open()) {
@@ -153,7 +145,7 @@ std::string ProcessData::PidsFilesParser::User(std::string uid) {
 
 			std::istringstream linestream(line);
 
-			std::string throwaway{ "" };
+			std::string throwaway { "" };
 			std::string userid { "" };
 
 			int wordlen = 0;
@@ -163,8 +155,8 @@ std::string ProcessData::PidsFilesParser::User(std::string uid) {
 				linestream.seekg(idx); //always start from the start of the line
 				linestream >> user >> throwaway >> userid;
 				if (userid.compare(uid) == 0) {
-					std::cout << "Uid values -: " << user << " " << throwaway << " " << uid
-												<< std::endl;
+					std::cout << "Uid values -: " << user << " " << throwaway
+							<< " " << uid << std::endl;
 					break;
 				}
 				wordlen = wordlen + user.length() + 1;

@@ -92,7 +92,7 @@ int LinuxParser::RunningProcesses() {
 string LinuxParser::Command(int pid) {
 	ProcessData::PidsFilesParser pidsFilesParser;
 	pidsFilesParser.buildfilepath(LinuxParser::kProcDirectory,
-			std::to_string(pid), LinuxParser::kStatFilename);
+			std::to_string(pid), LinuxParser::kCmdlineFilename);
 	return pidsFilesParser.ProcessCommand(pid);
 }
 
