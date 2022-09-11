@@ -53,7 +53,7 @@ long LinuxParser::Jiffies() {
 
 long LinuxParser::ActiveJiffies(int pid) {
 	SystemData::SystemJiffiesReader systemJiffiesReader;
-	systemJiffiesReader.buildfilepath(kProcDirectory, std::to_string(pid));
+	systemJiffiesReader.buildfilepath(kProcDirectory, std::to_string(pid), LinuxParser::kStatFilename);
 	return systemJiffiesReader.ActiveJiffies(pid);
 }
 
@@ -122,8 +122,20 @@ string LinuxParser::User(int pid) {
 			return pidsFilesParser.User(uid);
 }
 
-// TODO: Read and return the uptime of a process
-// REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid [[maybe_unused]]) {
-	return 0;
+
+long LinuxParser::UpTime(int pid) {
+	SystemData::SystemUptimeFileParser systemUptimeFileParser;
+		systemUptimeFileParser.buildfilepath(kProcDirectory, kUptimeFilename);
+		long sysuptime = systemUptimeFileParser.parseSystemUptimeFile();
+
+		SystemData::SystemJiffiesReader systemJiffiesReader;
+		systemJiffiesReader.buildfilepath(LinuxParser::kProcDirectory,
+					std::to_string(pid), LinuxParser::kStatFilename);
+
+		 long piduptime = systemJiffiesReader.UpTime(pid);
+		 long uptime = sysuptime - piduptime;
+
+		 uptime = uptime / sysconf(_SC_CLK_TCK);
+
+	return uptime;
 }

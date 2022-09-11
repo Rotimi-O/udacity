@@ -45,6 +45,7 @@ public:
 	long IdleJiffies();
 	long ActiveJiffies();
 	long ActiveJiffies(int pid);
+	long UpTime(int pid);
 
 private:
 	long GetJiffies(int rangeStart, int rangeEnd);
