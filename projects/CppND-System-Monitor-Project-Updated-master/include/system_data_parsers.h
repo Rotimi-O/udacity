@@ -62,8 +62,17 @@ public:
 	float parseMemInfoFile();
 };
 
-}
-;
+
+
+class CpuFileParser: public Parsers::parser {
+public:
+	CpuFileParser() {
+	}
+
+	float parseMemInfoFile();
+};
+
+};
 // namespace SystemData
 
 #endif

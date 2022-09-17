@@ -1,4 +1,21 @@
 #include "processor.h"
+#include "linux_parser.h"
 
-// TODO: Return the aggregate CPU utilization
-float Processor::Utilization() { return 0.0; }
+float Processor::Utilization() {
+	return this->utilization();
+}
+
+float Processor::utilization() {
+	float cpu_utilization{0.0f};
+	std::vector<std::string> utilization = LinuxParser::CpuUtilization();
+
+	for(std::string const &utilization_loc : utilization) {
+		cpu_utilization = cpu_utilization + std::stof(utilization_loc);
+	}
+
+	long int up_time = LinuxParser::UpTime();
+
+	this->utilization_ = cpu_utilization / up_time;
+
+	return this->utilization_;
+}
