@@ -27,7 +27,7 @@ string LinuxParser::Kernel() {
 	return kernelFileParser.parseKernelFile();
 }
 
-vector<int> Pids() {
+vector<int> LinuxParser::Pids() {
 	ProcessData::PidsFilesParser pidsFilesParser;
 	pidsFilesParser.buildfilepath(LinuxParser::kProcDirectory.c_str());
 	return pidsFilesParser.parsePidsFiles();
@@ -119,7 +119,8 @@ string LinuxParser::User(int pid) {
 			std::string uid = pidsFilesParser.Uid(pid);
 
 			pidsFilesParser.buildfilepath(LinuxParser::kPasswordPath);
-			return pidsFilesParser.User(uid);
+
+			return pidsFilesParser.User(uid);;
 }
 
 

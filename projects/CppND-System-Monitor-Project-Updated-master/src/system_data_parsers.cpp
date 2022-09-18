@@ -67,19 +67,19 @@ float SystemData::MemInfoFilesParser::parseMemInfoFile() {
 			std::istringstream linestream(line);
 			linestream >> entryName >> quantity >> unit;
 			if (entryName.compare("MemTotal:") == 0) {
-				std::cout << entryName << quantity << unit << std::endl;
+
 				totalMemory = std::stod(quantity);
-				std::cout << totalMemory << std::endl;
+
 			} else if (entryName.compare("MemFree:") == 0) {
-				std::cout << entryName << quantity << unit << std::endl;
+
 				freeMemory = std::stod(quantity);
-				std::cout << freeMemory << std::endl;
+
 				break;
 			}
 		}
 	}
 	float usedMemory = (totalMemory - freeMemory) * 100.0 / totalMemory;
-	std::cout << usedMemory << std::endl;
+
 	return usedMemory;
 }
 
@@ -100,7 +100,7 @@ long SystemData::SystemJiffiesReader::ActiveJiffies() {
 
 	std::ifstream filestream(filepath);
 	if (filestream.is_open()) {
-		jiffies = (GetJiffies(1, 3, "cpu") + GetJiffies(5, 7, "cpu"));
+		jiffies = (GetJiffies(1, 3, "cpu") + GetJiffies(6, 7, "cpu"));
 	}
 	return jiffies;
 }
@@ -120,7 +120,13 @@ std::vector<string> SystemData::SystemJiffiesReader::Jiffies() {
 	std::ifstream filestream(filepath);
 	std::vector<std::string> v;
 	if (filestream.is_open()) {
-		v = GetJiffies("cpu");
+		int cnt = 0;
+		for(std::string &word : GetJiffies("cpu")) {
+			if(cnt >= 1) {
+				v.push_back(word);
+			}
+			cnt++;
+		}
 	}
 	return v;
 }
@@ -129,7 +135,7 @@ long SystemData::SystemJiffiesReader::ActiveJiffies(int pid) {
 	long jiffies = 0;
 
 	if (PidDirectoryExists(pid)) {
-		std::cout << "file -: " << filepath << std::endl;
+
 		std::ifstream filestream(filepath);
 		if (filestream.is_open()) {
 			jiffies = GetJiffies(13, 16);
@@ -147,6 +153,7 @@ long SystemData::SystemJiffiesReader::GetJiffies(int rangeStart, int rangeEnd) {
 		if (cnt >= rangeStart && cnt <= rangeEnd) {
 			jiffies = jiffies + std::stol(word);
 		}
+		cnt++;
 	}
 	return jiffies;
 }
@@ -161,6 +168,7 @@ long SystemData::SystemJiffiesReader::GetJiffies(int rangeStart, int rangeEnd,
 		if (cnt >= rangeStart && cnt <= rangeEnd) {
 			jiffies = jiffies + std::stol(word);
 		}
+		cnt++;
 	}
 
 	return jiffies;
@@ -182,13 +190,10 @@ std::vector<std::string> SystemData::SystemJiffiesReader::GetJiffies() {
 
 			std::string first;
 			linestream >> first;
-			std::cout << "first -: " << first << std::endl;
 
 			while (wordlen < len) {
 				linestream.seekg(idx);
 				linestream >> word;
-				std::cout << cnt << " " << idx << " " << word << " " << len
-						<< std::endl;
 
 				v.push_back(word);
 				wordlen = wordlen + word.length() + 1;
@@ -217,13 +222,11 @@ std::vector<std::string> SystemData::SystemJiffiesReader::GetJiffies(
 
 			std::string first;
 			linestream >> first;
-			std::cout << "first -: " << first << std::endl;
+
 			if (first.compare(token) == 0) {
 				while (wordlen < len) {
 					linestream.seekg(idx);
 					linestream >> word;
-					std::cout << cnt << " " << idx << " " << word << " " << len
-							<< std::endl;
 
 					v.push_back(word);
 					wordlen = wordlen + word.length() + 1;
@@ -241,7 +244,7 @@ long SystemData::SystemJiffiesReader::UpTime(int pid) {
 	long uptime = 0;
 
 	if (PidDirectoryExists(pid)) {
-		std::cout << "file -: " << filepath << std::endl;
+
 		std::ifstream filestream(filepath);
 		if (filestream.is_open()) {
 			uptime = GetJiffies(22, 22);

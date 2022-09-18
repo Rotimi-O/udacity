@@ -1,3 +1,4 @@
+#include<iostream>
 #include "processor.h"
 #include "linux_parser.h"
 
@@ -13,7 +14,7 @@ float Processor::utilization() {
 		cpu_utilization = cpu_utilization + std::stof(utilization_loc);
 	}
 
-	long int up_time = LinuxParser::UpTime();
+	float up_time = (float)LinuxParser::UpTime();
 
 	this->utilization_ = cpu_utilization / up_time;
 

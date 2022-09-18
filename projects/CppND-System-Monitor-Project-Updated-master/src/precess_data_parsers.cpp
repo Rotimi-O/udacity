@@ -81,8 +81,6 @@ std::string ProcessData::PidsFilesParser::Ram(int pid) {
 
 						linestream.seekg(0); //rewind
 						linestream >> word >> ram >> memunit;
-						std::cout << "VmRSS values -: " << word << " " << ram
-								<< " " << memunit << " " << std::endl;
 						break;
 					}
 					wordlen = wordlen + word.length() + 1;
@@ -118,8 +116,6 @@ std::string ProcessData::PidsFilesParser::Uid(int pid) {
 
 						linestream.seekg(0); //rewind
 						linestream >> word >> uid;
-						std::cout << "Uid values -: " << word << " " << uid
-								<< std::endl;
 						break;
 					}
 					wordlen = wordlen + word.length() + 1;
@@ -155,11 +151,9 @@ std::string ProcessData::PidsFilesParser::User(std::string uid) {
 				linestream.seekg(idx); //always start from the start of the line
 				linestream >> user >> throwaway >> userid;
 				if (userid.compare(uid) == 0) {
-					std::cout << "Uid values -: " << user << " " << throwaway
-							<< " " << uid << std::endl;
-					break;
+					return user;
 				}
-				wordlen = wordlen + user.length() + 1;
+				wordlen = wordlen + userid.length() + 1;
 				idx = wordlen + 1;
 			}
 		}

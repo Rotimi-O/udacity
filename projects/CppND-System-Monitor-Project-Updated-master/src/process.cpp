@@ -63,5 +63,5 @@ void Process::upTime() {
 }
 
 bool Process::operator<(Process const& a) const {
-	return ((this->up_time_) < (a.up_time_));
+	return ((this->cpu_utilization_) < (a.cpu_utilization_));
 }

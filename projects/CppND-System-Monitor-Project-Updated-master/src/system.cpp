@@ -23,7 +23,8 @@ Processor& System::Cpu() {
 vector<Process>& System::Processes() {
 	std::vector<int> pids = LinuxParser::Pids();
 	for(int const pid: pids) {
-		Process process{pid};
+
+		Process process(pid);
 		this->processes_.push_back(process);
 	}
 

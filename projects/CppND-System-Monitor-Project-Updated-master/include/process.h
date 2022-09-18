@@ -15,7 +15,8 @@ class Process {
 
   Process(): pid_{0} , cpu_utilization_{0.0f}, user_{""}, command_{""}, ram_{""}, up_time_{0l} {}
 
-  Process(int pid): pid_{pid} {
+  Process(int pid) {
+	  this->pid_ = pid;
 	  this->cpuUtilization();
 	  this->user();
 	  this->command();

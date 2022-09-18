@@ -41,10 +41,10 @@ class TimeFormater {
 
   std::string GetSecondsAsSS() {
     std::string ss = "00";
-    if (seconds >= 10) {
-      ss = std::to_string(seconds);
-    } else if (seconds >= 0 && seconds < 10) {
-      ss = "0" + std::to_string(seconds);
+    if (seconds_ >= 10) {
+      ss = std::to_string(seconds_);
+    } else if (seconds_ >= 0 && seconds_ < 10) {
+      ss = "0" + std::to_string(seconds_);
     }
     return ss;
   }
@@ -54,18 +54,15 @@ class TimeFormater {
     hours = seconds / seconds_in_one_hour;
     long remainder = seconds % seconds_in_one_hour;
     minutes = remainder / 60;
-    seconds = remainder % 60;
+    seconds_ = remainder % 60;
   }
 
   long hours{0};
   long minutes{0};
-  long seconds{0};
+  long seconds_{0};
 };
 };  // namespace
-// TODO: Complete this helper function
-// INPUT: Long int measuring seconds
-// OUTPUT: HH:MM:SS
-// REMOVE: [[maybe_unused]] once you define the function
+
 string Format::ElapsedTime(long seconds) {
   TimeFormater timeFormater{seconds};
   return timeFormater.FormatedTime();
