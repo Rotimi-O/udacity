@@ -131,6 +131,8 @@ std::vector<string> SystemData::SystemJiffiesReader::Jiffies() {
 	return v;
 }
 
+
+
 long SystemData::SystemJiffiesReader::ActiveJiffies(int pid) {
 	long jiffies = 0;
 
@@ -146,7 +148,7 @@ long SystemData::SystemJiffiesReader::ActiveJiffies(int pid) {
 }
 
 long SystemData::SystemJiffiesReader::GetJiffies(int rangeStart, int rangeEnd) {
-	long jiffies = 0;
+	long jiffies = {0l};
 	std::vector<std::string> v = GetJiffies();
 	int cnt = 0;
 	for (std::string &word : v) {

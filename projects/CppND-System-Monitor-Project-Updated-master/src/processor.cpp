@@ -16,7 +16,8 @@ float Processor::utilization() {
 
 	float up_time = (float)LinuxParser::UpTime();
 
-	this->utilization_ = cpu_utilization / up_time;
+	float utilizationloc = cpu_utilization / up_time;
+	this->utilization_ = utilizationloc;
 
-	return this->utilization_;
+	return utilizationloc;
 }

@@ -53,7 +53,8 @@ long LinuxParser::Jiffies() {
 
 long LinuxParser::ActiveJiffies(int pid) {
 	SystemData::SystemJiffiesReader systemJiffiesReader;
-	systemJiffiesReader.buildfilepath(kProcDirectory, std::to_string(pid), LinuxParser::kStatFilename);
+	systemJiffiesReader.buildfilepath(kProcDirectory, std::to_string(pid),
+			LinuxParser::kStatFilename);
 	return systemJiffiesReader.ActiveJiffies(pid);
 }
 
@@ -70,9 +71,12 @@ long LinuxParser::IdleJiffies() {
 }
 
 vector<string> LinuxParser::CpuUtilization() {
-	SystemData::SystemJiffiesReader systemJiffiesReader;
-	systemJiffiesReader.buildfilepath(kProcDirectory, kStatFilename);
-	return systemJiffiesReader.Jiffies();
+	float jiffies = (float) (ActiveJiffies() + IdleJiffies());
+	float activejiffies = (float) (ActiveJiffies());
+	vector<std::string> utilization;
+	float cpuutilization = activejiffies / jiffies;
+	utilization.push_back(std::to_string(cpuutilization));
+	return utilization;
 }
 
 int LinuxParser::TotalProcesses() {
@@ -103,40 +107,32 @@ string LinuxParser::Ram(int pid) {
 	return pidsFilesParser.Ram(pid);
 }
 
-
 string LinuxParser::Uid(int pid) {
 	ProcessData::PidsFilesParser pidsFilesParser;
-		pidsFilesParser.buildfilepath(LinuxParser::kProcDirectory,
-				std::to_string(pid), LinuxParser::kStatusFilename);
-		return pidsFilesParser.Uid(pid);
+	pidsFilesParser.buildfilepath(LinuxParser::kProcDirectory,
+			std::to_string(pid), LinuxParser::kStatusFilename);
+	return pidsFilesParser.Uid(pid);
 }
-
 
 string LinuxParser::User(int pid) {
 	ProcessData::PidsFilesParser pidsFilesParser;
-			pidsFilesParser.buildfilepath(LinuxParser::kProcDirectory,
-					std::to_string(pid), LinuxParser::kStatusFilename);
-			std::string uid = pidsFilesParser.Uid(pid);
+	pidsFilesParser.buildfilepath(LinuxParser::kProcDirectory,
+			std::to_string(pid), LinuxParser::kStatusFilename);
+	std::string uid = pidsFilesParser.Uid(pid);
 
-			pidsFilesParser.buildfilepath(LinuxParser::kPasswordPath);
+	pidsFilesParser.buildfilepath(LinuxParser::kPasswordPath);
 
-			return pidsFilesParser.User(uid);;
+	return pidsFilesParser.User(uid);;
 }
 
-
 long LinuxParser::UpTime(int pid) {
-	SystemData::SystemUptimeFileParser systemUptimeFileParser;
-		systemUptimeFileParser.buildfilepath(kProcDirectory, kUptimeFilename);
-		long sysuptime = systemUptimeFileParser.parseSystemUptimeFile();
+	SystemData::SystemJiffiesReader systemJiffiesReader;
+	systemJiffiesReader.buildfilepath(LinuxParser::kProcDirectory,
+			std::to_string(pid), LinuxParser::kStatFilename);
 
-		SystemData::SystemJiffiesReader systemJiffiesReader;
-		systemJiffiesReader.buildfilepath(LinuxParser::kProcDirectory,
-					std::to_string(pid), LinuxParser::kStatFilename);
+	long piduptime = systemJiffiesReader.UpTime(pid);
+	long uptime = UpTime() - (piduptime / sysconf(_SC_CLK_TCK));
 
-		 long piduptime = systemJiffiesReader.UpTime(pid);
-		 long uptime = sysuptime - piduptime;
 
-		 uptime = uptime / sysconf(_SC_CLK_TCK);
-
-	return uptime;
+	return  uptime; //(UpTime());//  / sysconf(_SC_CLK_TCK)); //uptime;
 }
