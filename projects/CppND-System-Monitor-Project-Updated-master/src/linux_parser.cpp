@@ -48,7 +48,11 @@ long LinuxParser::UpTime() {
 long LinuxParser::Jiffies() {
 	SystemData::SystemJiffiesReader systemJiffiesReader;
 	systemJiffiesReader.buildfilepath(kProcDirectory, kStatFilename);
-	return systemJiffiesReader.SystemJiffies();
+	const std::vector<std::string> &v = systemJiffiesReader.Jiffies();
+	long jiffies = 0l;
+	for (const std::string &jiffy : v) {
+		jiffies = jiffies + std::stol(jiffy);
+	}
 }
 
 long LinuxParser::ActiveJiffies(int pid) {
@@ -71,11 +75,12 @@ long LinuxParser::IdleJiffies() {
 }
 
 vector<string> LinuxParser::CpuUtilization() {
-	float jiffies = (float) (ActiveJiffies() + IdleJiffies());
-	float activejiffies = (float) (ActiveJiffies());
-	vector<std::string> utilization;
-	float cpuutilization = activejiffies / jiffies;
-	utilization.push_back(std::to_string(cpuutilization));
+
+
+	float utilizationloc = ((float)ActiveJiffies()) / (ActiveJiffies() + IdleJiffies());
+
+	std::vector<std::string> utilization;
+	utilization.push_back(std::to_string(utilizationloc));
 	return utilization;
 }
 
@@ -133,6 +138,5 @@ long LinuxParser::UpTime(int pid) {
 	long piduptime = systemJiffiesReader.UpTime(pid);
 	long uptime = UpTime() - (piduptime / sysconf(_SC_CLK_TCK));
 
-
-	return  uptime; //(UpTime());//  / sysconf(_SC_CLK_TCK)); //uptime;
+	return uptime;
 }

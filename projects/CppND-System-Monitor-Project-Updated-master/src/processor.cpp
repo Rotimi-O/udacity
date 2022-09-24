@@ -7,17 +7,14 @@ float Processor::Utilization() {
 }
 
 float Processor::utilization() {
-	float cpu_utilization{0.0f};
-	std::vector<std::string> utilization = LinuxParser::CpuUtilization();
+	float utilization{0.0f};
+	const std::vector<std::string> &v = LinuxParser::CpuUtilization();
 
-	for(std::string const &utilization_loc : utilization) {
-		cpu_utilization = cpu_utilization + std::stof(utilization_loc);
-	}
+		for(std::string const &utilization_loc : v) {
+			utilization = utilization + std::stof(utilization_loc);
+		}
 
-	float up_time = (float)LinuxParser::UpTime();
+	this->utilization_ = utilization;
 
-	float utilizationloc = cpu_utilization / up_time;
-	this->utilization_ = utilizationloc;
-
-	return utilizationloc;
+	return utilization;
 }

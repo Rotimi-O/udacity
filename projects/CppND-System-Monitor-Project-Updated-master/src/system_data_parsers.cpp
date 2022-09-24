@@ -52,7 +52,7 @@ long SystemData::SystemUptimeFileParser::parseSystemUptimeFile() {
 			totalSystemUptime = std::stol(totalUptime);
 		}
 	}
-	return roundFloatToLong(totalSystemUptime);
+	return totalSystemUptime;
 }
 
 float SystemData::MemInfoFilesParser::parseMemInfoFile() {
@@ -78,7 +78,7 @@ float SystemData::MemInfoFilesParser::parseMemInfoFile() {
 			}
 		}
 	}
-	float usedMemory = (totalMemory - freeMemory) * 100.0 / totalMemory;
+	float usedMemory = (totalMemory - freeMemory) / totalMemory;
 
 	return usedMemory;
 }
@@ -89,7 +89,7 @@ long SystemData::SystemJiffiesReader::SystemJiffies() {
 
 	std::ifstream filestream(filepath);
 	if (filestream.is_open()) {
-		jiffies = GetJiffies(1, 10, "cpu");
+		jiffies = GetJiffies(2, 11, "cpu");
 	}
 	return jiffies;
 }
@@ -100,7 +100,7 @@ long SystemData::SystemJiffiesReader::ActiveJiffies() {
 
 	std::ifstream filestream(filepath);
 	if (filestream.is_open()) {
-		jiffies = (GetJiffies(1, 3, "cpu") + GetJiffies(6, 7, "cpu"));
+		jiffies = (GetJiffies(2, 4, "cpu") + GetJiffies(6, 7, "cpu"));
 	}
 	return jiffies;
 }
@@ -111,7 +111,7 @@ long SystemData::SystemJiffiesReader::IdleJiffies() {
 
 	std::ifstream filestream(filepath);
 	if (filestream.is_open()) {
-		jiffies = GetJiffies(4, 5, "cpu");
+		jiffies = GetJiffies(5, 6, "cpu");
 	}
 	return jiffies;
 }
@@ -121,8 +121,8 @@ std::vector<string> SystemData::SystemJiffiesReader::Jiffies() {
 	std::vector<std::string> v;
 	if (filestream.is_open()) {
 		int cnt = 0;
-		for(std::string &word : GetJiffies("cpu")) {
-			if(cnt >= 1) {
+		for (std::string &word : GetJiffies("cpu")) {
+			if (cnt >= 1) {
 				v.push_back(word);
 			}
 			cnt++;
@@ -131,8 +131,6 @@ std::vector<string> SystemData::SystemJiffiesReader::Jiffies() {
 	return v;
 }
 
-
-
 long SystemData::SystemJiffiesReader::ActiveJiffies(int pid) {
 	long jiffies = 0;
 
@@ -140,40 +138,26 @@ long SystemData::SystemJiffiesReader::ActiveJiffies(int pid) {
 
 		std::ifstream filestream(filepath);
 		if (filestream.is_open()) {
-			jiffies = GetJiffies(13, 16);
+			jiffies = GetJiffies(14, 17);
 		}
 	}
 
 	return jiffies;
 }
 
-long SystemData::SystemJiffiesReader::GetJiffies(int rangeStart, int rangeEnd) {
-	long jiffies = {0l};
+long SystemData::SystemJiffiesReader::GetJiffies(unsigned int rangeStart,
+		unsigned int rangeEnd) {
+
 	std::vector<std::string> v = GetJiffies();
-	int cnt = 0;
-	for (std::string &word : v) {
-		if (cnt >= rangeStart && cnt <= rangeEnd) {
-			jiffies = jiffies + std::stol(word);
-		}
-		cnt++;
-	}
-	return jiffies;
+
+	return extractFromVector(v, rangeStart, rangeEnd);
 }
 
-long SystemData::SystemJiffiesReader::GetJiffies(int rangeStart, int rangeEnd,
-		const std::string &token) {
-	long jiffies = 0;
+long SystemData::SystemJiffiesReader::GetJiffies(unsigned int rangeStart,
+		unsigned int rangeEnd, const std::string &token) {
 
 	std::vector<std::string> v = GetJiffies(token);
-	int cnt = 0;
-	for (std::string &word : v) {
-		if (cnt >= rangeStart && cnt <= rangeEnd) {
-			jiffies = jiffies + std::stol(word);
-		}
-		cnt++;
-	}
-
-	return jiffies;
+	return extractFromVector(v, rangeStart, rangeEnd);
 }
 
 std::vector<std::string> SystemData::SystemJiffiesReader::GetJiffies() {

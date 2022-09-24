@@ -41,10 +41,10 @@ long int Process::UpTime() {
 
 
 void Process::cpuUtilization() {
-	float up_time = LinuxParser::UpTime(pid_); //conversion from long to float
-	float active_jiffies = LinuxParser::ActiveJiffies(pid_); //conversion from long to float
+	float jiffies = (float)(LinuxParser::IdleJiffies() + LinuxParser::ActiveJiffies());
+	float active_jiffies = (float)(LinuxParser::ActiveJiffies(pid_));
 
-	this->cpu_utilization_ = (active_jiffies / up_time);
+	this->cpu_utilization_ = (100000000.0f * active_jiffies) / jiffies;
 }
 
 void Process::command() {
