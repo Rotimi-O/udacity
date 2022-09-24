@@ -248,7 +248,7 @@ long SystemData::SystemJiffiesReader::timemeasure(int pid) {
 
 		std::ifstream filestream(filepath);
 		if (filestream.is_open()) {
-			measure = GetJiffies(14, 17) +  GetJiffies(19, 19);
+			measure = (GetJiffies(14, 17) / sysconf(_SC_CLK_TCK)) +  GetJiffies(19, 19);
 		}
 	}
 

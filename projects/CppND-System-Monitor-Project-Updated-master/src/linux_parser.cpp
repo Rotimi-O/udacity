@@ -150,8 +150,8 @@ long LinuxParser::timemeasure(int pid) {
 	systemJiffiesReader.buildfilepath(LinuxParser::kProcDirectory,
 			std::to_string(pid), LinuxParser::kStatFilename);
 
-	long vmsize = systemJiffiesReader.timemeasure(pid);
+	long measure = systemJiffiesReader.timemeasure(pid);
 
 
-	return(vmsize / sysconf(_SC_CLK_TCK));
+	return measure;
 }
