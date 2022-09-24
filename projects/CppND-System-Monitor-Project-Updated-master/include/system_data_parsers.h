@@ -29,9 +29,6 @@ public:
 	long parseSystemUptimeFile();
 
 private:
-	long roundFloatToLong(float number) {
-		return std::lroundf(number);
-	}
 };
 
 class SystemJiffiesReader: public Parsers::parser {
@@ -48,9 +45,9 @@ public:
 	long UpTime(int pid);
 
 private:
-	long GetJiffies(int rangeStart, int rangeEnd);
+	long GetJiffies(unsigned int rangeStart, unsigned int rangeEnd);
 	std::vector<std::string> GetJiffies();
-	long GetJiffies(int rangeStart, int rangeEnd,  const std::string &token);
+	long GetJiffies(unsigned int rangeStart, unsigned int rangeEnd,  const std::string &token);
 	std::vector<std::string> GetJiffies(const std::string &token);
 };
 
