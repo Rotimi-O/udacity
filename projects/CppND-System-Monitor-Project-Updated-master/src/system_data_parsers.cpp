@@ -241,17 +241,17 @@ long SystemData::SystemJiffiesReader::UpTime(int pid) {
 }
 
 
-long SystemData::SystemJiffiesReader::vsize(int pid) {
-	long vmsize = 0;
+long SystemData::SystemJiffiesReader::timemeasure(int pid) {
+	long measure = 0;
 
 	if (PidDirectoryExists(pid)) {
 
 		std::ifstream filestream(filepath);
 		if (filestream.is_open()) {
-			vmsize = GetJiffies(14, 15);
+			measure = GetJiffies(14, 17) +  GetJiffies(22, 22);
 		}
 	}
 
-	return vmsize;
+	return measure;
 }
 

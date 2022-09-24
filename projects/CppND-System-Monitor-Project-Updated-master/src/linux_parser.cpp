@@ -145,12 +145,12 @@ long LinuxParser::UpTime(int pid) {
 	return uptime;
 }
 
-long LinuxParser::vmsize(int pid) {
+long LinuxParser::timemeasure(int pid) {
 	SystemData::SystemJiffiesReader systemJiffiesReader;
 	systemJiffiesReader.buildfilepath(LinuxParser::kProcDirectory,
 			std::to_string(pid), LinuxParser::kStatFilename);
 
-	long vmsize = systemJiffiesReader.vsize(pid);
+	long vmsize = systemJiffiesReader.timemeasure(pid);
 
 
 	return(vmsize / sysconf(_SC_CLK_TCK));

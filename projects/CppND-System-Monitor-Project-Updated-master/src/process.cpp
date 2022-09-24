@@ -43,7 +43,7 @@ void Process::cpuUtilization() {
 }
 
 void Process::compareMeasure() {
-	this->compare_measure_= LinuxParser::vmsize(pid_);
+	this->compare_measure_= LinuxParser::timemeasure(pid_);
 }
 
 void Process::command() {
