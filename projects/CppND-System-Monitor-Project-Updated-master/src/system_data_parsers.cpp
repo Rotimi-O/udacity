@@ -100,7 +100,7 @@ long SystemData::SystemJiffiesReader::ActiveJiffies() {
 
 	std::ifstream filestream(filepath);
 	if (filestream.is_open()) {
-		jiffies = (GetJiffies(2, 4, "cpu") + GetJiffies(6, 7, "cpu"));
+		jiffies = (GetJiffies(2, 4, "cpu") + GetJiffies(7, 9, "cpu"));
 	}
 	return jiffies;
 }
@@ -138,7 +138,7 @@ long SystemData::SystemJiffiesReader::ActiveJiffies(int pid) {
 
 		std::ifstream filestream(filepath);
 		if (filestream.is_open()) {
-			jiffies = GetJiffies(14, 17);
+			jiffies = GetJiffies(15, 16);
 		}
 	}
 
@@ -238,5 +238,20 @@ long SystemData::SystemJiffiesReader::UpTime(int pid) {
 	}
 
 	return uptime;
+}
+
+
+long SystemData::SystemJiffiesReader::vsize(int pid) {
+	long vmsize = 0;
+
+	if (PidDirectoryExists(pid)) {
+
+		std::ifstream filestream(filepath);
+		if (filestream.is_open()) {
+			vmsize = GetJiffies(14, 15);
+		}
+	}
+
+	return vmsize;
 }
 

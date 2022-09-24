@@ -38,7 +38,7 @@ int ProcessData::PidsFilesParser::Processes(std::string token) {
 }
 
 std::string ProcessData::PidsFilesParser::ProcessCommand(int pid) {
-	std::string processCommand { "no command line " };
+	std::string processCommand { " " };
 
 	if (PidDirectoryExists(pid)) {
 		std::string line { "" };

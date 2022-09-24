@@ -22,13 +22,22 @@ Processor& System::Cpu() {
 
 vector<Process>& System::Processes() {
 	std::vector<int> pids = LinuxParser::Pids();
+
 	for(int const pid: pids) {
 
-		Process process(pid);
+		Process process;
+		process.setPid(pid);
+		process.setRam();
+		process.setCpuUtilization();
+		process.setCommand();
+		process.setUpTime();
+		process.setUser();
+		process.setCompareMeasure();
+
 		this->processes_.push_back(process);
 	}
 
-	std::sort(processes_.begin(), processes_.end());
+	std::sort(processes_.begin(), processes_.end(), std::less<Process>());
 
 	return processes_;
 }

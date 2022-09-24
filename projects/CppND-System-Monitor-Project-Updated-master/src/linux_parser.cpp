@@ -59,7 +59,11 @@ long LinuxParser::ActiveJiffies(int pid) {
 	SystemData::SystemJiffiesReader systemJiffiesReader;
 	systemJiffiesReader.buildfilepath(kProcDirectory, std::to_string(pid),
 			LinuxParser::kStatFilename);
-	return systemJiffiesReader.ActiveJiffies(pid);
+
+	float jiffies = (float)(systemJiffiesReader.ActiveJiffies(pid));
+	float ratio = jiffies / (sysconf(_SC_CLK_TCK));
+
+	return (std::lroundf(ratio));
 }
 
 long LinuxParser::ActiveJiffies() {
@@ -139,4 +143,15 @@ long LinuxParser::UpTime(int pid) {
 	long uptime = UpTime() - (piduptime / sysconf(_SC_CLK_TCK));
 
 	return uptime;
+}
+
+long LinuxParser::vmsize(int pid) {
+	SystemData::SystemJiffiesReader systemJiffiesReader;
+	systemJiffiesReader.buildfilepath(LinuxParser::kProcDirectory,
+			std::to_string(pid), LinuxParser::kStatFilename);
+
+	long vmsize = systemJiffiesReader.vsize(pid);
+
+
+	return(vmsize / sysconf(_SC_CLK_TCK));
 }

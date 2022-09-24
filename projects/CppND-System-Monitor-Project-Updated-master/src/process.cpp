@@ -1,3 +1,4 @@
+#include <cmath>
 #include <unistd.h>
 #include <cctype>
 #include <sstream>
@@ -12,9 +13,9 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-
-int Process::Pid() { return this->pid_; }
-
+int Process::Pid() {
+	return this->pid_;
+}
 
 float Process::CpuUtilization() {
 	return this->cpu_utilization_;
@@ -25,26 +26,24 @@ std::string Process::Command() {
 }
 
 std::string Process::Ram() {
-	this->ram_ =  LinuxParser::Ram(pid_);
 	return this->ram_;
 }
-
 
 std::string Process::User() {
 	return this->user_;
 }
 
-
 long int Process::UpTime() {
 	return this->up_time_;
 }
 
-
 void Process::cpuUtilization() {
-	float jiffies = (float)(LinuxParser::IdleJiffies() + LinuxParser::ActiveJiffies());
-	float active_jiffies = (float)(LinuxParser::ActiveJiffies(pid_));
+	float active_jiffies = (float) (LinuxParser::ActiveJiffies(pid_));
+	this->cpu_utilization_ = (active_jiffies / (LinuxParser::UpTime(pid_)));
+}
 
-	this->cpu_utilization_ = (100000000.0f * active_jiffies) / jiffies;
+void Process::compareMeasure() {
+	this->compare_measure_= LinuxParser::vmsize(pid_);
 }
 
 void Process::command() {
@@ -52,7 +51,7 @@ void Process::command() {
 }
 
 void Process::ram() {
-	this->ram_ =  LinuxParser::Ram(pid_);
+	this->ram_ = LinuxParser::Ram(pid_);
 }
 
 void Process::user() {
@@ -63,6 +62,9 @@ void Process::upTime() {
 	this->up_time_ = LinuxParser::UpTime(pid_);
 }
 
-bool Process::operator<(Process const& a) const {
-	return ((this->cpu_utilization_) < (a.cpu_utilization_));
+bool Process::operator<(Process const &a) const {
+	if(this->compare_measure_ > a.compare_measure_) {
+		return true;
+	}
+	return false;
 }

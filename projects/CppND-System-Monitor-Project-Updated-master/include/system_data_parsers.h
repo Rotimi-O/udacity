@@ -43,6 +43,7 @@ public:
 	long ActiveJiffies();
 	long ActiveJiffies(int pid);
 	long UpTime(int pid);
+	long vsize(int pid);
 
 private:
 	long GetJiffies(unsigned int rangeStart, unsigned int rangeEnd);
