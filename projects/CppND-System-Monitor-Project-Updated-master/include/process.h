@@ -12,6 +12,7 @@ public:
 	std::string Ram();
 	long int UpTime();
 	bool operator<(Process const &a) const;
+	bool operator>(Process const &a) const;
 
 	Process() :
 			pid_ { 0 }, cpu_utilization_ { 0.0f }, user_ { "" }, command_ { "" }, ram_ {

@@ -57,7 +57,7 @@ std::string ProcessData::PidsFilesParser::ProcessCommand(int pid) {
 }
 
 std::string ProcessData::PidsFilesParser::Ram(int pid) {
-	std::string ram { " " };
+	std::string ram { "0" };
 
 	if (PidDirectoryExists(pid)) {
 		std::string line { "" };
@@ -89,6 +89,7 @@ std::string ProcessData::PidsFilesParser::Ram(int pid) {
 			}
 		}
 	}
+	ram = std::to_string(roundToLong((std::stof(ram)) / 1024.0f)); //convert to MB
 	return ram;
 }
 

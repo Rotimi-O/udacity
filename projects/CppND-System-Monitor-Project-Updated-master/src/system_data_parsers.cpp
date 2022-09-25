@@ -241,14 +241,14 @@ long SystemData::SystemJiffiesReader::UpTime(int pid) {
 }
 
 
-long SystemData::SystemJiffiesReader::timemeasure(int pid) {
+long SystemData::SystemJiffiesReader::CompareMeasure(int pid) {
 	long measure = 0;
 
 	if (PidDirectoryExists(pid)) {
 
 		std::ifstream filestream(filepath);
 		if (filestream.is_open()) {
-			measure = (GetJiffies(14, 17) / sysconf(_SC_CLK_TCK)) +  GetJiffies(19, 19);
+			measure = (GetJiffies(14, 17)  +  GetJiffies(22, 22)) / sysconf(_SC_CLK_TCK);
 		}
 	}
 

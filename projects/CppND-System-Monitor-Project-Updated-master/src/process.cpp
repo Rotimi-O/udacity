@@ -39,11 +39,13 @@ long int Process::UpTime() {
 
 void Process::cpuUtilization() {
 	float active_jiffies = (float) (LinuxParser::ActiveJiffies(pid_));
-	this->cpu_utilization_ = (active_jiffies / (LinuxParser::UpTime(pid_)));
+	float cpu_utilization = (active_jiffies / (LinuxParser::UpTime(pid_)));
+	this->cpu_utilization_ = cpu_utilization;
 }
 
 void Process::compareMeasure() {
-	this->compare_measure_= LinuxParser::timemeasure(pid_);
+	this->compare_measure_= LinuxParser::CompareMeasure(pid_);//std::stol(LinuxParser::Ram(pid_));
+
 }
 
 void Process::command() {
@@ -63,6 +65,13 @@ void Process::upTime() {
 }
 
 bool Process::operator<(Process const &a) const {
+	if(this->compare_measure_ < a.compare_measure_) {
+		return true;
+	}
+	return false;
+}
+
+bool Process::operator>(Process const &a) const {
 	if(this->compare_measure_ > a.compare_measure_) {
 		return true;
 	}

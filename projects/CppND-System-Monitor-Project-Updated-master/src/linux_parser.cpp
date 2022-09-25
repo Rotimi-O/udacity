@@ -53,6 +53,7 @@ long LinuxParser::Jiffies() {
 	for (const std::string &jiffy : v) {
 		jiffies = jiffies + std::stol(jiffy);
 	}
+	return jiffies;
 }
 
 long LinuxParser::ActiveJiffies(int pid) {
@@ -145,12 +146,12 @@ long LinuxParser::UpTime(int pid) {
 	return uptime;
 }
 
-long LinuxParser::timemeasure(int pid) {
+long LinuxParser::CompareMeasure(int pid) {
 	SystemData::SystemJiffiesReader systemJiffiesReader;
 	systemJiffiesReader.buildfilepath(LinuxParser::kProcDirectory,
 			std::to_string(pid), LinuxParser::kStatFilename);
 
-	long measure = systemJiffiesReader.timemeasure(pid);
+	long measure = systemJiffiesReader.CompareMeasure(pid);
 
 
 	return measure;

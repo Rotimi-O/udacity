@@ -43,7 +43,7 @@ public:
 	long ActiveJiffies();
 	long ActiveJiffies(int pid);
 	long UpTime(int pid);
-	long timemeasure(int pid);
+	long CompareMeasure(int pid);
 
 private:
 	long GetJiffies(unsigned int rangeStart, unsigned int rangeEnd);
