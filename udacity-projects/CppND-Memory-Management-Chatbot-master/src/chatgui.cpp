@@ -135,7 +135,10 @@ ChatBotPanelDialog::~ChatBotPanelDialog()
     //// STUDENT CODE
     ////
 
-    delete _chatLogic;
+    if(_chatLogic != nullptr) {
+        delete _chatLogic;
+        _chatLogic = nullptr;
+    }
 
     ////
     //// EOF STUDENT CODE
@@ -148,6 +151,7 @@ void ChatBotPanelDialog::AddDialogItem(wxString text, bool isFromUser)
     _dialogSizer->Add(item, 0, wxALL | (isFromUser == true ? wxALIGN_LEFT : wxALIGN_RIGHT), 8);
     _dialogSizer->Layout();
 
+    //_dialogSizer ->
     // make scrollbar show up
     this->FitInside(); // ask the sizer about the needed size
     this->SetScrollRate(5, 5);

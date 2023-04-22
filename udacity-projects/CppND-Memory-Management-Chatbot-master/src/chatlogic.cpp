@@ -31,22 +31,25 @@ ChatLogic::~ChatLogic()
 {
     //// STUDENT CODE
     ////
-
-    // delete chatbot instance
-    delete _chatBot;
+    if(_chatBot != nullptr) {
+        delete _chatBot;
+        _chatBot = nullptr;
+    }
 
     // delete all nodes
     for (auto it = std::begin(_nodes); it != std::end(_nodes); ++it)
     {
-        delete *it;
+        if(*it != nullptr) {
+            delete *it;
+        }
     }
-
     // delete all edges
     for (auto it = std::begin(_edges); it != std::end(_edges); ++it)
     {
-        delete *it;
+        if(*it != nullptr) {
+            delete *it;
+        }
     }
-
     ////
     //// EOF STUDENT CODE
 }
