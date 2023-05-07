@@ -21,7 +21,7 @@ ChatLogic::ChatLogic()
     _chatBot = new ChatBot("../images/chatbot.png");
 
     // add pointer to chatlogic so that chatbot answers can be passed on to the GUI
-    _chatBot->SetChatLogicHandle(this);
+    _chatBot->SetChatLogicHandle(std::unique_ptr<ChatLogic>(this));
 
     ////
     //// EOF STUDENT CODE
@@ -31,10 +31,10 @@ ChatLogic::~ChatLogic()
 {
     //// STUDENT CODE
     ////
-    if(_chatBot != nullptr) {
+    /*if(_chatBot != nullptr) {
         delete _chatBot;
         _chatBot = nullptr;
-    }
+    }*/
 
     // delete all nodes
     for (auto it = std::begin(_nodes); it != std::end(_nodes); ++it)
