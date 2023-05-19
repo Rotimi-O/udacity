@@ -45,7 +45,17 @@ ChatBot::~ChatBot()
 
 //// STUDENT CODE
 ////
-
+//Copy Constructor
+ChatBot::ChatBot(ChatBot &src) {
+    std::cout << "ChatBot copy constructor" << std::endl;
+    wxBitmap *imageLoc = src._image;;
+    _image =  new wxBitmap();
+    *_image = *imageLoc;
+    _currentNode = src._currentNode;
+    _rootNode = src._rootNode;
+    _chatLogic = src._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
+}
 ////
 //// EOF STUDENT CODE
 
